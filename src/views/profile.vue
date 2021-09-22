@@ -75,11 +75,12 @@
 
                             <div class="row justify-content-sm-center" v-if="displayNone">
                                 <div class="col-sm-4 col-sm-4-custom" style="display: inline-block;">
-                                    <button class="btn btn-profile-custom" @click="this.submitType = 'update'">Update</button>
-                                </div>
-                                <div class="col-sm-4 col-sm-4-custom" style="display: inline-block;">
                                     <button type="button" class="btn btn-profile-custom" @click="toggleEdit('cancel')">Cancel</button>
                                 </div>
+                                <div class="col-sm-4 col-sm-4-custom" style="display: inline-block;">
+                                    <button class="btn btn-profile-custom" @click="this.submitType = 'update'">Update</button>
+                                </div>
+
                             </div>
 
                         <!-- </form> -->
@@ -136,11 +137,12 @@
 
                         <div class="row justify-content-sm-center">
                             <div class="col-sm-4" style="text-align: center;">
-                                <button type="button" class="btn btn-profile-password" @click="this.submitType = 'update'">Update</button>
-                            </div>
-                            <div class="col-sm-4" style="text-align: center;">
                                 <button type="button" class="btn btn-profile-password" style="background-color: #FFA5A5;" @click="this.submitType = 'delete'">Delete Account</button>
                             </div>
+                            <div class="col-sm-4" style="text-align: center;">
+                                <button type="button" class="btn btn-profile-password" @click="this.submitType = 'update'">Update</button>
+                            </div>
+
                         </div>
                         
                     <!-- </form> -->
