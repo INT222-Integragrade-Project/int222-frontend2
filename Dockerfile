@@ -1,5 +1,5 @@
-FROM node:lts-alpine as build-stage
-WORKDIR /app
+FROM node:12.13.0-alpine as build-stage
+WORKDIR /src
 COPY package*.json ./
 RUN npm install
 COPY . .
