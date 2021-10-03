@@ -107,10 +107,11 @@
 
                     <!-- Loop For Product -->
                     <div class="product-item" v-for="(pd, index) in productlist" :key="index">
-                        <router-link to="/productdetail">
+                        <!-- <router-link to="/productdetail"> -->
+                        <router-link :to="{name:'productdetail' , params:{id:pd.productId}}" >
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="pd.imageName">
+                                    <img :src="`http://13.76.46.188:3000/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -150,6 +151,14 @@ import Navbar from "../components/navbar.vue"
 export default {
     name : "product",
     components : {Navbar},
+    props: {
+        product: {
+            type: Object,
+        },
+        id: {
+            type: String
+        }
+    },
     data() {
         return {
             displayNone: false,
@@ -158,6 +167,7 @@ export default {
             isLiked: false,
 
             productlist: [],
+            // productcolorlist: [],
 
             // productData: [
             //     {
@@ -184,10 +194,21 @@ export default {
                 console.log (e)
             }
         },
+        // async getproductcolor() {
+        //     try {
+        //         const res = await fetch('http://13.76.46.188:3000/showproductcolor');
+        //         const data = res.json();
+        //         return data;
+        //     }catch(e){
+        //         console.log (e)
+        //     }
+        // },
 
         async create(){
             this.productlist = await this.getproduct();
+            // this.productcolorlist = await this.getproductcolor();
             console.log(this.productlist)
+            // console.log(this.productcolorlist)
         }
 
     }

@@ -16,21 +16,21 @@
 
                     <div class="form-group">
                         <label for="inputProductName"><b>PRODUCT NAME</b></label>
-                        <input type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag">
+                        <input v-model="inputproductname" type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag">
                     </div>
 
                     <div class="form-row" >
                         <div class="form-group col-lg-4">
                             <label for="inputPrice"><b>PRICE</b></label>
-                            <input type="number" class="form-control" name="inputPrice" placeholder="999.00">
+                            <input v-model="inputprice" type="number" class="form-control" name="inputPrice" placeholder="999.00">
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputDate"><b>MANUFACTURE DATE</b></label>
-                            <input type="date" class="form-control" name="inputDate">
+                            <input v-model="inputmanufacture" type="date" class="form-control" name="inputDate">
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputWarranty"><b>WARRANTY</b></label>
-                            <select class="form-control" name="inputWarranty">
+                            <select v-model="inputwarranty" class="form-control" name="inputWarranty">
                                 <option value="3">3 Days</option>
                                 <option value="5">5 Days</option>
                                 <option value="7">7 Days</option>
@@ -43,11 +43,11 @@
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label for="inputSize"><b>SIZE</b></label>
-                            <input type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
+                            <input v-model="inputsize" type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
                         </div>
                         <div class="form-group col-lg-6">
                             <label for="inputState"><b>BRAND</b></label>
-                            <select  class="form-control" name="inputState">
+                            <select  v-model="inputbrand" class="form-control" name="inputState">
                                 <option value="10001">Anello</option>
                                 <option value="10002">Chanel</option>
                                 <option value="10003">Dior</option>
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="form-group col-lg-12">
                             <label for="productDescription"><b>PRODUCT DESCRIPTION</b></label>
-                            <textarea class="form-control" name="productDescription" rows="6"></textarea>
+                            <textarea v-model="inputdescription" class="form-control" name="productDescription" rows="6"></textarea>
                         </div>
                     </div>
 
@@ -94,7 +94,7 @@
                             <div class="row">
                                 <div class="col-lg-4" style="margin-top: 30px;">
                                     <label for="inputStock"><b>Stock</b></label>
-                                    <input type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
+                                    <input v-model="inputstock" type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
                                 </div>
                             </div>
 
@@ -126,6 +126,17 @@
         components : {Navbar, Cropperjs},
         data() {
             return {
+                reqparam: "" ,
+                inputproductname: "",
+                inputprice: 0,
+                inputmanufacture: "",
+                inputwarranty: "",
+                inputsize: "",
+                inputbrand: "",
+                inputdescription: "",
+                // color and image
+                inputstock: 0,
+
                 indexFormColor: 1,
                 colorSwatch: [],
                 formColor:[
@@ -273,7 +284,24 @@
                 }
             },
             doAddProduct(){
+                // this.uploadImage(this.addImage);
+                this.reqparam = `productname=${this.inputproductname}&price=${this.inputprice}&warranty=${this.inputwarranty}&menufacturrerdate=${this.inputmanufacture}&description=${this.inputdescription}&size=${this.inputsize}&brandId=${this.inputbrand}`;
+                fetch( `http://13.76.46.188:3000/add?${this.reqparam}` , {
+                method: "POST",
+                }).catch((error) => console.log(error));
+                
                 console.log("Add Product!")
+                console.log(this.inputproductname)
+                console.log(this.inputprice)
+                console.log(this.inputmanufacture)
+                console.log(this.inputwarranty)
+                console.log(this.inputsize)
+                console.log(this.inputbrand)
+                console.log(this.inputdescription)
+                console.log(this.inputstock)
+                console.log("===========")
+                console.log(this.reqparam)
+
             }
         }
     }

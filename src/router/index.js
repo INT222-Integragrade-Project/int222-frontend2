@@ -74,8 +74,9 @@ const routes = [
     component: member
   },
   {
-    path: '/productdetail',
+    path: '/productdetail/:id',
     name: 'productdetail',
+    props: true , 
     component: productdetail
   },
   

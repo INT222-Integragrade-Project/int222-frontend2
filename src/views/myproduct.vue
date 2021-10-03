@@ -73,7 +73,7 @@
                         <router-link to="/myproductdetail">
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="pd.imageName">
+                                    <img :src="`http://13.76.46.188:3000/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -167,11 +167,18 @@ export default {
             this.productlist = await this.getproduct();
         },
 
-        confirmDelete: function(obj){
-            if (confirm("ต้องการลบรายการสินค้า?")) {
-                console.log(obj)
+        confirmDelete(obj){
+            if (confirm("Do you want to delete this product?")) {
+                console.log(obj.productId)
                 // this.productlist.splice(this.productlist.indexOf(obj), 1);
-                return true;
+                // return true;
+                console.log(`http://13.76.46.188:3000/deleteproductid?deleteproductid=${obj.productId}`)
+                fetch(`http://13.76.46.188:3000/deleteproductid?deleteproductid=${obj.productId}` , {
+                method:'DELETE'
+                })
+                // fetch("http://104.215.139.17:3000/deletefile?imagesdelete=" +  this.product.images , {
+                // method:'DELETE'
+                // })
             }
         }
     }
