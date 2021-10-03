@@ -6,7 +6,7 @@ RUN npm install
 RUN npm i -f
 COPY . .
 RUN npm run build
-EXPOSE 8080
+EXPOSE 80
 CMD [ "http-server", "dist" ]
 
 FROM nginx:stable-alpine as production-stage
