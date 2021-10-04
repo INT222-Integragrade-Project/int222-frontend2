@@ -301,7 +301,7 @@
                 console.log(this.inputstock)
                 console.log("===========")
                 console.log(this.reqparam)
-
+                alert("You have added a product!");
             }
         }
     }
