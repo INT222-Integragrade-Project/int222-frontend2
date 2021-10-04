@@ -156,35 +156,37 @@
     </ul>
 
     <!-- Side bar Menu -->
-    <div class="sidebar-menu" :class="{show: isShowSidebar}">
-        <div class="row">
-            <div class="col-md" style="text-align: right;" >
-                <a href="javascript:void(0)" class="close-sidebar" @click="toggleSidebar"><i class="bi bi-x" style="font-size: 40px;"></i></a>
+    <transition name="slide-fade" mode="in-out">
+        <div class="sidebar-menu" v-show="isShowSidebar">
+            <div class="row">
+                <div class="col-md" style="text-align: right;" >
+                    <a href="javascript:void(0)" class="close-sidebar" @click="toggleSidebar"><i class="bi bi-x" style="font-size: 40px;"></i></a>
+                </div>
             </div>
+
+            <router-link to="/myproduct">
+                <div class="sidebar-icon">
+                    <span class="material-icons-round">ballot</span>
+                    My Product
+                </div>
+            </router-link>
+
+            <router-link to="/addproduct">
+                <div class="sidebar-icon">
+                    <span class="material-icons-round">grid_view</span>
+                    Add Product
+                </div>
+            </router-link>
+
+            <router-link to="/member">
+                <div class="sidebar-icon">
+                    <span class="material-icons">people_alt</span>
+                    Members
+                </div>
+            </router-link>
+        
         </div>
-
-        <router-link to="/myproduct">
-            <div class="sidebar-icon">
-                <span class="material-icons-round">ballot</span>
-                My Product
-            </div>
-        </router-link>
-
-        <router-link to="/addproduct">
-            <div class="sidebar-icon">
-                <span class="material-icons-round">grid_view</span>
-                Add Product
-            </div>
-        </router-link>
-
-        <router-link to="/member">
-            <div class="sidebar-icon">
-                <span class="material-icons">people_alt</span>
-                Members
-            </div>
-        </router-link>
-    
-    </div>
+    </transition>
 
     <!-- Search Panel -->
     <div class="search-panel" :class="{show: isShowSearch}">
@@ -255,11 +257,7 @@
             },
             toggleSidebar: function(){
                 // Sidebar
-                if(this.isShowSidebar){
-                    this.isShowSidebar = false;
-                } else {
-                    this.isShowSidebar = true;
-                }
+                this.isShowSidebar = !this.isShowSidebar
             },
             toggleSearch: function(){
                 // Search bar on Mobile
@@ -566,25 +564,36 @@
 
 
     /* <!-- สำหรับ Side Bar --> */
+
+    .slide-fade-enter-active, .slide-fade-leave-active {
+        transition: all .3s ease-in;
+        transform: translateX(400px);
+    }
+    .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(400px);
+        opacity: 1;
+    }
+
     .sidebar-menu {
         width: 400px;
         height: 100% !important;
         top: 0;
-        right: -400px;
+        /* right: -400px; */
+        right: 0px;
         overflow: hidden;
         background-color: #ffffff;
         /* box-shadow: 0px 5px 10px grey; */
         position: absolute;
         z-index: 2000;
-        opacity: 0;
         transition: all .3s ease-in;
     }
 
-    .sidebar-menu.show {
+    /* .sidebar-menu.show {
         opacity: 1;
         right: 0px;
         box-shadow: 0px 5px 10px grey;
-    }
+        transition: all .3s ease-in;
+    } */
 
     .sidebar-menu a {
         text-align: left;
