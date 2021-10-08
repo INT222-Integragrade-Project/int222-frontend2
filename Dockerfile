@@ -1,10 +1,13 @@
 # build stage
 FROM node:lts-alpine as build-stage
-WORKDIR /app
+RUN npm install -g http-server
+WORKDIR /src
 COPY package*.json ./
 RUN npm install
+RUN npm i -f
 COPY . .
 RUN npm run build
+CMD [ "http-server", "dist" ]
 
 # production stage
 FROM nginx:stable-alpine as production-stage
