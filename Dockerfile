@@ -1,10 +1,19 @@
 FROM node:lts-alpine as build-stage
-RUN npm install -g http-server
 WORKDIR /src
+
 COPY package*.json ./
 RUN npm install
-RUN npm i -f
+
 COPY . .
+
 RUN npm run build
-EXPOSE 8080
-CMD [ "http-server", "dist" ]
+
+FROM nginx:alpine as production-build
+COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=builder /vue-ui/dist /usr/share/nginx/html
+
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
