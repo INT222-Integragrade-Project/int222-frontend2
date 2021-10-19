@@ -8,4 +8,4 @@ services:
 networks:
     default:
       external:
-        name: project2-net  docker pull
+        name: project2-net
