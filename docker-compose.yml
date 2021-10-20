@@ -1,10 +1,10 @@
 version: '3.3'
 services:
   front-docker:
-    image: ghcr.io/artidsun/int222-frontend-dev:latest
+    image: ghcr.io/artidsun/int222-frontend:latest
     container_name: frontend-dev
     ports:
-      - "8080:80"
+      - "80:80"
 networks:
     default:
       external:
