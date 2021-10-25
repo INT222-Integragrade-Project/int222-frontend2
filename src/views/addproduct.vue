@@ -126,7 +126,8 @@
         components : {Navbar, Cropperjs},
         data() {
             return {
-                reqparam: "" ,
+                req1: "" ,
+                req2: "" ,
                 inputproductname: "",
                 inputprice: 0,
                 inputmanufacture: "",
@@ -135,7 +136,9 @@
                 inputbrand: "",
                 inputdescription: "",
                 // color and image
-                inputstock: 0,
+                inputcolor: [],
+                inputimage: [],
+                inputstock: [],
 
                 indexFormColor: 1,
                 colorSwatch: [],
@@ -285,11 +288,24 @@
             },
             doAddProduct(){
                 // this.uploadImage(this.addImage);
-                this.reqparam = `productname=${this.inputproductname}&price=${this.inputprice}&warranty=${this.inputwarranty}&menufacturrerdate=${this.inputmanufacture}&description=${this.inputdescription}&size=${this.inputsize}&brandId=${this.inputbrand}`;
-                fetch( `http://13.76.46.188:3000/add?${this.reqparam}` , {
+                this.req1 = `productname=${this.inputproductname}&price=${this.inputprice}&warranty=${this.inputwarranty}&menufacturrerdate=${this.inputmanufacture}&description=${this.inputdescription}&size=${this.inputsize}&brandId=${this.inputbrand}`;
+                fetch( `http://13.76.46.188:3000/add?${this.req1}` , {
                 method: "POST",
-                }).catch((error) => console.log(error));
+                })
+                .then((response => {
+                    const res = response.json();
+                    return res;
+                }
+                ))
+                .then(response => {
+                    console.log(response); // ready use
+                    this.req2 = `productid=${response}&colorid=${this.inputcolor}&stock=${this.inputstock}&images=${this.inputimage}`
+                })
+                // .catch((error) => console.log(error));
                 
+                fetch( `http://13.76.46.188:3000/addColorImage?${this.req2}` , {
+                method: "POST",
+                })
                 console.log("Add Product!")
                 console.log(this.inputproductname)
                 console.log(this.inputprice)
@@ -300,9 +316,22 @@
                 console.log(this.inputdescription)
                 console.log(this.inputstock)
                 console.log("===========")
-                console.log(this.reqparam)
+                console.log(this.req1)
+                console.log(this.req2)
                 alert("You have added a product!");
-            }
+            },
+            // uploadimage(images) {
+            //     for(let i = 0; i < images.length; i++) {
+            //         let data = new FormDate();
+            //         data.append("apple" , images[i]);
+            //         axios
+            //             .post(inputimage,data)
+            //             .then(response => {
+            //                 console.log(response)
+            //             })
+            //     }
+            // }
+            
         }
     }
 </script>
