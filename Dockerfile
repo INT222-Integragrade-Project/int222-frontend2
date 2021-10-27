@@ -12,5 +12,5 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/data /usr/share/nginx/html:rw
 COPY nginx/logs /var/log/nginx/:rw
 COPY nginx/conf.d /etc/nginx/conf.d
-COPY nginx/ssl /ssl/:rw
+COPY nginx/ssl /ssl:rw
 EXPOSE 443 80
