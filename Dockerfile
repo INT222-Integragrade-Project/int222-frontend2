@@ -9,4 +9,7 @@ FROM nginx as production-stage
 RUN mkdir /app
 COPY --from=build-stage /app/dist /app
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
+COPY nginx/data /usr/share/nginx/html:rw
+COPY nginx/logs /var/log/nginx/:rw
+COPY nginx/conf.d /etc/nginx/conf.d
+EXPOSE 443 80
