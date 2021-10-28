@@ -37,5 +37,6 @@ jobs:
             cd int222-frontend2
             git pull origin main
             sudo docker rm -f frontend
+            sudo docker rmi ghcr.io/artidsun/int222-frontend
             sudo docker pull ghcr.io/artidsun/int222-frontend:latest
             sudo docker-compose up -d
