@@ -47,8 +47,8 @@
                         <div class="login-form ">
                             <!-- action ไปหน้าที่เข้าสู่ระบบ -->
                             <form @submit.prevent="doLogin">
-                                <input type="text" class="form-control login-input" v-model="username_mb" name="txtUserName" placeholder="User Name">
-                                <input type="password" class="form-control login-input" v-model="password_mb" name="txtPassword" placeholder="Password">
+                                <input type="text" class="form-control login-input" v-model="username" name="txtUserName" placeholder="User Name">
+                                <input type="password" class="form-control login-input" v-model="password" name="txtPassword" placeholder="Password">
                                 <button type="submit" class="btn btn-login">Log In</button><br>
                             </form>
                             <hr style="margin-top:50px">
@@ -76,29 +76,75 @@
         components : {Navbar},
         data() {
             return {
+                user: [],
                 username: '',
                 password: '',
-                username_mb: '',
-                password_mb: '',
-                test_user: 'admin',
-                test_password: 'admin',
-                // test_user: 'admin',
-                // test_password: 'admin',
+                // username_mb: '',
+                // password_mb: '',
                 // test_user: 'admin',
                 // test_password: 'admin',
             }
         },
+        mounted(){
+        this.create();
+        },
         methods : {
-            doLogin: function() {
+            async doLogin() {
+
+                // var checkuser = false;
+                // for (let i = 0 ; i < this.user.length ; i++) {
+                //     if(this.user[i].username === this.username) {
+                //         checkuser = true;
+                //     } else {
+                //         checkuser = false;
+                //     }
+                // }
+                // console.log(checkuser);
+                // if(checkuser) {
+                    
+            fetch( `http://13.76.46.188:3000/login/?username=${this.username}&pwd=${this.password}` , {
+                method: "GET",
+                })
+                .then((response => {
+                    const res = response.json();
+                    return res;
+                }
+                ))
+                .then(response => {
+                    // console.log(response);
+                    // console.log(response.role);
+                    // console.log(response.userName);
+                    localStorage.setItem("sessUsername", response.userName);
+                    localStorage.setItem("sessRole", response.role);
+                    localStorage.setItem("sessId", response.userId);
+                    this.$router.push('product') 
+                })
+                // } else {
+                //     alert("Invalid Username or Password. Please try it again.")
+                // }
 
                 // ดึงข้อมูลจาก database มาเช็คกับ user จาก input  
-                if(this.username == this.test_user && this.password == this.test_password){
-                    localStorage.setItem("sessUsername", this.username);
-                    localStorage.setItem("sessRole", "superadmin");
-                    this.$router.push('product') 
-                } else {
-                    alert("Invalid Username or Password. Please try it again.")
-                }
+                // if(this.username == this.test_user && this.password == this.test_password){
+                //     localStorage.setItem("sessUsername", this.username);
+                //     localStorage.setItem("sessRole", "customer");
+                //     this.$router.push('product') 
+                // } else {
+                //     alert("Invalid Username or Password. Please try it again.")
+                // }
+                // }
+            },
+            async getuser() {
+            try {
+                const res = await fetch('http://13.76.46.188:3000/showuser');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+            },
+            async create() {
+                this.user = await this.getuser();
+                console.log(this.user);
             }
         }
 	}

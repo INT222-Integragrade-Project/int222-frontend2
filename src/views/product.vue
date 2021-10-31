@@ -106,7 +106,7 @@
                 <div class="row" style="margin:0px;">
 
                     <!-- Loop For Product -->
-                    <div class="product-item" v-for="(pd, index) in productlist" :key="index">
+                    <div class="product-item" v-for="(pd, index) in products" :key="index">
                         <!-- <router-link to="/productdetail"> -->
                         <router-link :to="{name:'productdetail' , params:{id:pd.productId}}" >
                             <div class="div-product">
@@ -124,12 +124,12 @@
                         </router-link>
                         <div class="div-product-favorite">
                             <!-- for unliked -->
-                            <button type="button" class="btn link-custom" style="cursor:pointer;" v-if="!pd.is_like" v-on:click="pd.is_like = !pd.is_like">
+                            <button type="button" class="btn link-custom" style="cursor:pointer;" v-if="!pd.is_like" v-on:click="pd.is_like = !pd.is_like"  @click="addFav(pd)">
                                 <span class="material-icons-outlined">favorite_border</span>
                             </button>
 
                             <!-- for liked -->
-                            <button type="button" class="btn link-custom" style="cursor:pointer;" v-if="pd.is_like" v-on:click="pd.is_like = !pd.is_like">
+                            <button type="button" class="btn link-custom" style="cursor:pointer;" v-if="pd.is_like" v-on:click="pd.is_like = !pd.is_like" @click="delFav(pd)">
                                 <span class="material-icons-outlined">favorite</span>
                             </button>
                         </div>
@@ -165,8 +165,12 @@ export default {
             displayShow: true,
             isNotLiked: true,
             isLiked: false,
-
-            productlist: [],
+            sessId: 0,
+            products: [],
+            // favIdForDel: 0,
+            // myFav: [],
+            // myFavProducts: [],
+            // favIdForDel: 0,
             // productcolorlist: [],
 
             // productData: [
@@ -184,7 +188,27 @@ export default {
         this.create()
     },
     methods: {
-        
+        addFav(obj) {
+            fetch( `http://13.76.46.188:3000/${this.sessId}/AddFav/?productId=${obj.productId}` , {
+                method: "POST",
+                })
+                console.log(obj.productId);
+        },
+        // delFav(obj) {
+        //     if (confirm("Do you want to cancel this liked product?")) {
+        //     for(let i = 0 ; i < this.myFav.length ; i++) {
+        //         if(obj.productId === this.myFav[i].productId) {
+        //             this.favIdForDel = this.myFav[i].favoriteId;
+        //             break;
+        //         }
+        //     }
+        //     fetch( `http://13.76.46.188:3000/${this.sessId}/DeleteFav/?favoriteId=${this.favIdForDel}` , {
+        //         method: "DELETE",
+        //         })
+        //         console.log(obj.productId);
+        //         // window.location.reload();
+        //     }
+        // },
         async getproduct() {
             try {
                 const res = await fetch('http://13.76.46.188:3000/show');
@@ -194,6 +218,16 @@ export default {
                 console.log (e)
             }
         },
+        // async getFav() {
+        //     this.sessId = localStorage.sessId;
+        //     try {
+        //         const res = await fetch(`http://13.76.46.188:3000/${this.sessId}/MyFav/`);
+        //         const data = res.json();
+        //         return data;
+        //     }catch(e){
+        //         console.log (e)
+        //     }
+        // },
         // async getproductcolor() {
         //     try {
         //         const res = await fetch('http://13.76.46.188:3000/showproductcolor');
@@ -205,9 +239,10 @@ export default {
         // },
 
         async create(){
-            this.productlist = await this.getproduct();
+            this.products = await this.getproduct();
+            this.sessId = localStorage.sessId;
             // this.productcolorlist = await this.getproductcolor();
-            console.log(this.productlist)
+            console.log(this.sessId)
             // console.log(this.productcolorlist)
         }
 

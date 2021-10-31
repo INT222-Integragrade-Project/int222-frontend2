@@ -281,7 +281,7 @@ export default {
 
       imageLocation: require("../assets/image/product/Anello/PA1/PA1Green.png"),
 
-      productItem: [
+      productItem: [ // mock up
         {
           refname: "imgItem1",
           name: "PA1Green.png",
