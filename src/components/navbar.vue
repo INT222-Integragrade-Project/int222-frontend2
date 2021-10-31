@@ -227,13 +227,16 @@
                 isShowSidebar: false,
                 isShowSearch: false,
                 sessUsername: '',
+                sessRole: '',
             }
         },
         mounted() {
             // ถ้ามีการ Login เข้ามา
             if (localStorage.sessUsername) {
                 this.sessUsername = localStorage.sessUsername;
-
+                this.sessRole = localStorage.sessRole;
+                console.log(this.sessUsername);
+                console.log(this.sessRole);
                 if(this.displayNone){
                     this.displayNone = false;
                 } else {

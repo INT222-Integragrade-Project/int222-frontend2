@@ -153,7 +153,7 @@ export default {
     },
     methods: {
 
-        async getproduct() {
+        async getproducts() {
             try {
                 const res = await fetch('http://13.76.46.188:3000/show');
                 const data = res.json();
@@ -164,7 +164,7 @@ export default {
         },
 
         async create(){
-            this.productlist = await this.getproduct();
+            this.productlist = await this.getproducts();
         },
 
         confirmDelete(obj){
