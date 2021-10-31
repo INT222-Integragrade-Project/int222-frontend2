@@ -4,7 +4,7 @@ services:
     image: ghcr.io/artidsun/int222-frontend:latest
     container_name: frontend
     volumes:
-      - /home/dohttps/nginx/ssl/:/ssl/
+      - /home/dohttps/nginx/ssl:/ssl
       - /home/dohttps/nginx/data:/usr/share/nginx/html
       - /home/dohttps/nginx/logs:/var/log/nginx/
     ports:
