@@ -189,7 +189,7 @@ export default {
     },
     methods: {
         addFav(obj) {
-            fetch( `http://13.76.46.188:3000/${this.sessId}/AddFav/?productId=${obj.productId}` , {
+            fetch( `https://www.dora.company/api/${this.sessId}/AddFav/?productId=${obj.productId}` , {
                 method: "POST",
                 })
                 console.log(obj.productId);
@@ -211,7 +211,7 @@ export default {
         // },
         async getproduct() {
             try {
-                const res = await fetch('http://13.76.46.188:3000/show');
+                const res = await fetch('https://www.dora.company/api/show');
                 const data = res.json();
                 return data;
             }catch(e){
