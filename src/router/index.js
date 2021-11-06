@@ -54,8 +54,9 @@ const routes = [
     component: myproduct
   },
   {
-    path: '/myproductdetail',
+    path: '/myproductdetail/:id',
     name: 'myproductdetail',
+    props: true ,
     component: myproductdetail
   },
   {
@@ -64,8 +65,9 @@ const routes = [
     component: addproduct
   },
   {
-    path: '/editproduct',
+    path: '/editproduct/:idforedit',
     name: 'editproduct',
+    props: true ,
     component: editproduct
   },
   {

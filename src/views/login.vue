@@ -101,7 +101,8 @@
                 // }
                 // console.log(checkuser);
                 // if(checkuser) {
-                    
+
+                // add validate --------------------------------------------------------------
             fetch( `http://13.76.46.188:3000/login/?username=${this.username}&pwd=${this.password}` , {
                 method: "GET",
                 })

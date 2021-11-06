@@ -70,10 +70,10 @@
 
                     <!-- Loop For Product -->
                     <div class="product-item" v-for="(pd, index) in productlist" :key="index">
-                        <router-link to="/myproductdetail">
+                        <router-link :to="{name:'myproductdetail' , params:{id:pd.productId}}">
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="`http://13.76.46.188:3000/getfirstpic/${pd.productId}`">
+                                    <img :src="`https://www.dora.company/api/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -107,6 +107,14 @@ import Navbar from "../components/navbar.vue"
 export default {
     name : "myproduct",
     components : {Navbar},
+    props: {
+        product: {
+            type: Object,
+        },
+        id: {
+            type: String
+        }
+    },
     data() {
         return {
             displayNone: false,
@@ -152,10 +160,9 @@ export default {
         this.create()
     },
     methods: {
-
         async getproducts() {
             try {
-                const res = await fetch('http://13.76.46.188:3000/show');
+                const res = await fetch('https://www.dora.company/api/show');
                 const data = res.json();
                 return data;
             }catch(e){
@@ -172,8 +179,8 @@ export default {
                 console.log(obj.productId)
                 // this.productlist.splice(this.productlist.indexOf(obj), 1);
                 // return true;
-                console.log(`http://13.76.46.188:3000/deleteproductid?deleteproductid=${obj.productId}`)
-                fetch(`http://13.76.46.188:3000/deleteproductid?deleteproductid=${obj.productId}` , {
+                console.log(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}`)
+                fetch(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}` , {
                 method:'DELETE'
                 })
                 // fetch("http://104.215.139.17:3000/deletefile?imagesdelete=" +  this.product.images , {

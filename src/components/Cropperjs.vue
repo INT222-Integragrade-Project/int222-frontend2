@@ -118,6 +118,28 @@
             // this.cropImg = "http://localhost:8080/img/PD1Red.d96fd641.png"
         },
         methods: {
+            uploadImage() {
+                const formData = new FormData();
+                const fileField = document.querySelector('input[type="file"]');
+
+                formData.append('imageName', 'abc123');
+                formData.append('file', fileField.files[0]);
+
+                fetch(`http://13.76.46.188:3000/upload`, {
+                  method: 'POST',
+                  body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                  console.log('Success:', result);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+            },
+
+
+            
             setImage(e) {
                 const file = e.target.files[0];
                 if (!file.type.includes("image/")) {
@@ -135,6 +157,7 @@
 
                     this.hidden = true
                     this.show = false
+                    this.uploadImage();
                 } else {
                     alert("Sorry, FileReader API not supported");
                 }
