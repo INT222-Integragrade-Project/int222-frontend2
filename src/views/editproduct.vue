@@ -12,30 +12,30 @@
 
         <div class="row justify-content-md-center">
             <div class="col-md-7">
-                <form  @submit.prevent="doEditProduct(pd)"  style="padding:2em; background-color:#ffffff;text-align:left;" v-for="pd in productData" :key="pd">
+                <form  @submit.prevent="doEditProduct(pd)"  style="padding:2em; background-color:#ffffff;text-align:left;">
 
                     <div class="form-group">
                         <label for="inputProductName"><b>PRODUCT NAME</b></label>
-                        <input type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag" :value="pd.product_name">
+                        <input v-model="editproductname" type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag">
                     </div>
 
                     <div class="form-row" >
                         <div class="form-group col-lg-4">
                             <label for="inputPrice"><b>PRICE</b></label>
-                            <input type="number" class="form-control" name="inputPrice" placeholder="999.00" :value="pd.product_price">
+                            <input v-model="editprice" type="number" class="form-control" name="inputPrice" placeholder="999.00">
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputDate"><b>MANUFACTURE DATE</b></label>
-                            <input type="date" class="form-control" name="inputDate" :value="pd.menufacturrerdate">
+                            <input v-model="editmanufacture" type="date" class="form-control" name="inputDate">
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputWarranty"><b>WARRANTY</b></label>
-                            <select class="form-control" name="inputWarranty">
-                                <option value="3" :selected="pd.warranty == 3">3 Days</option>
-                                <option value="5" :selected="pd.warranty == 5">5 Days</option>
-                                <option value="7" :selected="pd.warranty == 7">7 Days</option>
-                                <option value="30" :selected="pd.warranty == 30">1 Month</option>
-                                <option value="0" :selected="pd.warranty == 0">None</option>
+                            <select v-model="editwarranty" class="form-control" name="inputWarranty">
+                                <option value="3" :selected="editwarranty == 3">3 Days</option>
+                                <option value="5" :selected="editwarranty == 5">5 Days</option>
+                                <option value="7" :selected="editwarranty == 7">7 Days</option>
+                                <option value="30" :selected="editwarranty == 30">1 Month</option>
+                                <option value="0" :selected="editwarranty == 0">None</option>
                             </select>
                         </div>
                     </div>
@@ -43,17 +43,17 @@
                     <div class="form-row">
                         <div class="form-group col-lg-6">
                             <label for="inputSize"><b>SIZE</b></label>
-                            <input type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
+                            <input v-model="editsize" type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
                         </div>
                         <div class="form-group col-lg-6">
                             <label for="inputState"><b>BRAND</b></label>
-                            <select  class="form-control" name="inputState">
-                                <option value="10001" :selected="pd.brandId == 10001">Anello</option>
-                                <option value="10002" :selected="pd.brandId == 10002">Chanel</option>
-                                <option value="10003" :selected="pd.brandId == 10003">Dior</option>
-                                <option value="10004" :selected="pd.brandId == 10004">Guicci</option>
-                                <option value="10005" :selected="pd.brandId == 10005">Lyn</option>
-                                <option value="10006" :selected="pd.brandId == 10006">Ysl</option>
+                            <select v-model="editbrand" class="form-control" name="inputState">
+                                <option value="10001" :selected="editbrand == 10001">Anello</option>
+                                <option value="10002" :selected="editbrand == 10002">Chanel</option>
+                                <option value="10003" :selected="editbrand == 10003">Dior</option>
+                                <option value="10004" :selected="editbrand == 10004">Guicci</option>
+                                <option value="10005" :selected="editbrand == 10005">Lyn</option>
+                                <option value="10006" :selected="editbrand == 10006">Ysl</option>
                             </select>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="form-group col-lg-12">
                             <label for="productDescription"><b>PRODUCT DESCRIPTION</b></label>
-                            <textarea class="form-control" name="productDescription" rows="6" :value="pd.description"></textarea>
+                            <textarea v-model="editdescription" class="form-control" name="productDescription" rows="6"></textarea>
                         </div>
                     </div>
 
@@ -125,8 +125,24 @@
     export default {
         name : "editproduct",
         components : {Navbar, Cropperjs},
+        props: {
+            idforedit: {
+                type: String,
+                required: true,
+            },
+        },
         data() {
             return {
+                product: Object,
+                editproductname: "",
+                editprice: 0,
+                editmanufacture: "",
+                editwarranty: "",
+                editsize: "",
+                editbrand: "",
+                editdescription: "",
+                editpath: "",
+
                 image: "",
                 img_style: "width:100%;",
                 indexFormColor: 3, // index ของฟอร์มสินค้า // ถ้าข้อมูลมีหลายสี index จะเป็น จำนวนสินค้า id นี้
@@ -139,23 +155,25 @@
             }
         },
         mounted() {
-
+            this.create();
+            // this.editproductname = this.product.productName;
+            // console.log(this.editproductname)
             // loop for รายการสีที่มี
             this.createColorSwatch(1)
             this.createColorSwatch(2)
             this.createColorSwatch(3)
             
-            this.productData = [{
-				product_id: "100001",
-				product_name: "ANELLO shoulder bag ALTON SIZE REG",
-				product_price: 888.00,
-				warranty: "7",
-				menufacturrerdate: "2020-10-02",
-				description: "ALTON A collection that brings together Anello's most popular material of all time, PU (synthetic leather) developed using a new material. that when touched, it gives a soft, smooth feeling durable and strong According to the main properties of PU (synthetic leather), it is also more lightweight. Anello has also selected a bag shape that is chic, chic, but still has a classic aura. Use earth tones, simple but elegant, easy to match with any outfit. Ready to enjoy traveling smoothly. There is a strap that can be rolled up for easy storage. Can be a Shopping Bag, easy to carry and convenient to use.",
-				size: "29 x 32 cm",
-				brandId: "10001",
-				product_stock: 1000 
-			}]
+            // this.productData = [{
+			// 	product_id: "100001",
+			// 	product_name: "ANELLO shoulder bag ALTON SIZE REG",
+			// 	product_price: 888.00,
+			// 	warranty: "7",
+			// 	manufacturrerdate: "2020-10-02",
+			// 	description: "ALTON A collection that brings together Anello's most popular material of all time, PU (synthetic leather) developed using a new material. that when touched, it gives a soft, smooth feeling durable and strong According to the main properties of PU (synthetic leather), it is also more lightweight. Anello has also selected a bag shape that is chic, chic, but still has a classic aura. Use earth tones, simple but elegant, easy to match with any outfit. Ready to enjoy traveling smoothly. There is a strap that can be rolled up for easy storage. Can be a Shopping Bag, easy to carry and convenient to use.",
+			// 	size: "29 x 32 cm",
+			// 	brandId: "10001",
+			// 	product_stock: 1000 
+			// }]
 
             this.formColor = [
                 {
@@ -168,30 +186,49 @@
                     stock: "1000",
                     imageName: require("../assets/image/product/Anello/PA1/PA1Green.png"),
                 },
-                {
-                    index: 2,
-                    enableCancel: true,
-                    visibleComponent: "cropperjs",
-                    isDisplay: true,
-                    productColorId: "110002",
-                    colorId: "20011",
-                    stock: "1000",
-                    imageName: require("../assets/image/product/Anello/PA2/PA2Blue.png"),
-                },
-                {
-                    index: 3,
-                    enableCancel: true,
-                    visibleComponent: "cropperjs",
-                    isDisplay: true,
-                    productColorId: "110003",
-                    colorId: "20012",
-                    stock: "1000",
-                    imageName: require("../assets/image/product/Anello/PA3/PA3Black.png"),
-                },
+                // {
+                //     index: 2,
+                //     enableCancel: true,
+                //     visibleComponent: "cropperjs",
+                //     isDisplay: true,
+                //     productColorId: "110002",
+                //     colorId: "20011",
+                //     stock: "1000",
+                //     imageName: require("../assets/image/product/Anello/PA2/PA2Blue.png"),
+                // },
+                // {
+                //     index: 3,
+                //     enableCancel: true,
+                //     visibleComponent: "cropperjs",
+                //     isDisplay: true,
+                //     productColorId: "110003",
+                //     colorId: "20012",
+                //     stock: "1000",
+                //     imageName: require("../assets/image/product/Anello/PA3/PA3Black.png"),
+                // },
             ]
 
         },
         methods : {
+        async getproduct() {
+            try {
+                const res = await fetch("https://www.dora.company/api/show/100001");
+                const data = res.json();
+                return data;
+            } catch (e) {
+                console.log(e);
+      }
+    },
+    async create() {
+      this.product = await this.getproduct();
+      this.editproductname = this.product.productName;
+      this.editprice = this.product.price;
+      this.editmanufacture = this.product.menufacturrerdate; //*****
+      this.editwarranty = this.product.warranty;
+      this.editsize = this.product.size;
+      this.editbrand = this.product.brandId;
+      this.editdescription = this.product.description;
+    },
             createColorSwatch(index) {
                 this.colorSwatch[index] = [
                     {
@@ -327,8 +364,12 @@
                     // this.formColor.splice(this.formColor.indexOf(frmColor), 1);
                 }
             },
-            doEditProduct(obj){
-                console.log(obj)
+            doEditProduct(){
+                this.editpath = `productname=${this.editproductname}&price=${this.editprice}&warranty=${this.editwarranty}&menufacturrerdate=${this.editmanufacture}&description=${this.editdescription}&size=${this.editsize}&brandId=${this.editbrand}`;
+                fetch( `https://www.dora.company/api/edit/100001?${this.editpath}` , {
+                method: "PUT",
+                })
+                console.log(this.editmanufacture)
                 console.log("Edit Product!")
             }
         }

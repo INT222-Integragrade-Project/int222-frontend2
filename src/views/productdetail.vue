@@ -81,19 +81,6 @@
                 <div class="title">Detail</div>
 
                 <p style="text-indent: 2em; text-align: justify">
-                  <!-- ALTON A collection that brings together Anello's most popular
-                  material of all time, PU (synthetic leather) developed using a
-                  new material. that when touched, it gives a soft, smooth
-                  feeling durable and strong
-                  <span v-if="spoilerHide"
-                    >According to the main properties of PU (synthetic leather),
-                    it is also more lightweight. Anello has also selected a bag
-                    shape that is chic, chic, but still has a classic aura. Use
-                    earth tones, simple but elegant, easy to match with any
-                    outfit. Ready to enjoy traveling smoothly. There is a strap
-                    that can be rolled up for easy storage. Can be a Shopping
-                    Bag, easy to carry and convenient to use.
-                  </span> -->
                     {{ product.description }}
                   <!-- <a class="spoiler" v-if="spoilerShow" @click="showSpoiler"
                     >read more..</a
@@ -394,7 +381,7 @@ export default {
   methods: {
     async getproduct() {
       try {
-        const res = await fetch("http://13.76.46.188:3000/show/" + this.id);
+        const res = await fetch("https://www.dora.company/api/show/" + this.id);
         const data = res.json();
         return data;
       } catch (e) {
@@ -403,7 +390,7 @@ export default {
     },
     async getproductcolor() {
       try {
-        const res = await fetch("http://13.76.46.188:3000/showproductcolor");
+        const res = await fetch("https://www.dora.company/api/showproductcolor");
         const data = res.json();
         return data;
       } catch (e) {
@@ -412,7 +399,7 @@ export default {
     },
     async getcolor() {
       try {
-        const res = await fetch("http://13.76.46.188:3000/showallcolor");
+        const res = await fetch("https://www.dora.company/api/showallcolor");
         const data = res.json();
         return data;
       } catch (e) {

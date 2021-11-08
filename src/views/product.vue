@@ -107,11 +107,10 @@
 
                     <!-- Loop For Product -->
                     <div class="product-item" v-for="(pd, index) in products" :key="index">
-                        <!-- <router-link to="/productdetail"> -->
                         <router-link :to="{name:'productdetail' , params:{id:pd.productId}}" >
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="`http://13.76.46.188:3000/getfirstpic/${pd.productId}`">
+                                    <img :src="`https://www.dora.company/api/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -172,16 +171,6 @@ export default {
             // myFavProducts: [],
             // favIdForDel: 0,
             // productcolorlist: [],
-
-            // productData: [
-            //     {
-            //         product_id: "100001",
-            //         product_name: "ANELLO shoulder bag ALTON SIZE REG",
-            //         product_location: require('../assets/image/product/Anello/PA1/PA1Pink.png'),
-            //         product_price: 3500,
-            //         is_like: false,
-            //     },
-            // ],
         }
     },
     mounted(){
@@ -189,10 +178,9 @@ export default {
     },
     methods: {
         addFav(obj) {
-            fetch( `http://13.76.46.188:3000/${this.sessId}/AddFav/?productId=${obj.productId}` , {
+            fetch( `https://www.dora.company/api/${this.sessId}/AddFav/?productId=${obj.productId}` , {
                 method: "POST",
                 })
-                console.log(obj.productId);
         },
         // delFav(obj) {
         //     if (confirm("Do you want to cancel this liked product?")) {
@@ -211,26 +199,26 @@ export default {
         // },
         async getproduct() {
             try {
-                const res = await fetch('http://13.76.46.188:3000/show');
+                const res = await fetch('https://www.dora.company/api/show');
                 const data = res.json();
                 return data;
             }catch(e){
                 console.log (e)
             }
         },
-        // async getFav() {
-        //     this.sessId = localStorage.sessId;
-        //     try {
-        //         const res = await fetch(`http://13.76.46.188:3000/${this.sessId}/MyFav/`);
-        //         const data = res.json();
-        //         return data;
-        //     }catch(e){
-        //         console.log (e)
-        //     }
-        // },
+        async getFav() {
+            this.sessId = localStorage.sessId;
+            try {
+                const res = await fetch(`https://www.dora.company/api/${this.sessId}/MyFav/`);
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
         // async getproductcolor() {
         //     try {
-        //         const res = await fetch('http://13.76.46.188:3000/showproductcolor');
+        //         const res = await fetch('https://www.dora.company/api/showproductcolor');
         //         const data = res.json();
         //         return data;
         //     }catch(e){
@@ -244,8 +232,7 @@ export default {
             // this.productcolorlist = await this.getproductcolor();
             console.log(this.sessId)
             // console.log(this.productcolorlist)
-        }
-
+        },
     }
 }
 </script>

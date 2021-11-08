@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="txtSearchMember" placeholder="ค้นหาสมาชิกและผู้ใช้งาน" value="" autocomplete="off">
+                            <input type="text" class="form-control" name="txtSearchMember" placeholder="search" value="" autocomplete="off">
                             <div class="input-group-append">
                                 <i class="bi bi-search" style="position:relative;font-size: 1rem;color: #ccc;left: -25px;top:7px;"></i>
                             </div>
@@ -207,7 +207,41 @@
     export default {
         name : "member",
         components : {Navbar},
+        props: {
+            idforedit: {
+                type: String,
+                required: true,
+            },
+        },
+        data() {
+            return {
+                user: [],
+                // username: '',
+                // password: '',
+                // username_mb: '',
+                // password_mb: '',
+                // test_user: 'admin',
+                // test_password: 'admin',
+            }
+        },
+        mounted(){
+        this.create();
+        console.log(this.idforedit)
+        },
         methods : {
+            async create() {
+                this.user = await this.getuser();
+                console.log(this.user);
+            },
+            async getuser() {
+            try {
+                const res = await fetch('http://13.76.46.188:3000/showuser');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+            },
             confirmChange: function(){
                 if(confirm("ต้องการเปลี่ยน Role หรือไม่")){
                     alert("เปลี่ยนแล้วจ้าา");
