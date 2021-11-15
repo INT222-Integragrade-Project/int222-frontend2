@@ -5,7 +5,6 @@ services:
     container_name: frontend
     ports:
       - "8080:8080"
-      - "80:8080"
       - "443:443"
     # volumes:
     #   - /home/dohttps/nginx/data/.well-known/pki-validation:/usr/share/nginx/html/.well-known/pki-validation
