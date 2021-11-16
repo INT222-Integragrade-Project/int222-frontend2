@@ -10,5 +10,5 @@ RUN mkdir /app
 COPY --from=build-stage /app/dist /app
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/conf.d /etc/nginx/conf.d
-EXPOSE 8080 443
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
