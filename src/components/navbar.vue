@@ -27,6 +27,7 @@
         </div>
 
         <!-- ถ้าเป็น user ทั่วไป -->
+        <div v-if="isshowfav">
         <li class="nav-menu-item-right-link margin-right-menu" v-if="displayShow">
             <router-link to="/myfavorite" class="menu-link">
                 <span class="material-icons">favorite_border</span>
@@ -38,6 +39,7 @@
                 <span class="material-icons">favorite_border</span>
             </router-link>
         </li>
+        </div>
         
 
         <!-- ถ้ามีการ Login แล้ว -->
@@ -114,6 +116,7 @@
         </div>
         
         <!-- ถ้าเป็น user ทั่วไป -->
+        <div v-if="isshowfav">
         <li class="nav-menu-mobile-right-img margin-right-menu" v-if="displayShow">
             <router-link to="/myfavorite" class="menu-link">
                 <span class="material-icons">favorite_border</span>
@@ -125,6 +128,7 @@
                 <span class="material-icons">favorite_border</span>
             </router-link>
         </li>
+        </div>
 
         <!-- ถ้ามีการ Login แล้ว -->
             <li class="nav-menu-mobile-right-img" v-if="displayNone">
@@ -239,12 +243,14 @@
                 resId: '',
                 isAdmin: false,
                 isSuperAdmin: false,
+                isshowfav: false,
             }
         },
         mounted() {
             if (localStorage.token) {
                 this.username = localStorage.username;
                 this.role = localStorage.resRole;
+                this.isshowfav = true
                 if(this.displayNone){
                     this.displayNone = false;
                 } else {
