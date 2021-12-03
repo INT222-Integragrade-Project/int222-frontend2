@@ -161,6 +161,7 @@ export default {
             selectedBrand: 'All Brand',
             selectedSort: '',
             filterBrand: 0,
+            role: Navbar.role,
         }
     },
     mounted(){
@@ -173,21 +174,6 @@ export default {
                 headers: { "Authorization" : `Bearer ${this.token}`}
                 })
         },
-        // delFav(obj) {
-        //     if (confirm("Do you want to cancel this liked product?")) {
-        //     for(let i = 0 ; i < this.myFav.length ; i++) {
-        //         if(obj.productId === this.myFav[i].productId) {
-        //             this.favIdForDel = this.myFav[i].favoriteId;
-        //             break;
-        //         }
-        //     }
-        //     fetch( `http://13.76.46.188:3000/${this.sessId}/DeleteFav/?favoriteId=${this.favIdForDel}` , {
-        //         method: "DELETE",
-        //         })
-        //         console.log(obj.productId);
-        //         // window.location.reload();
-        //     }
-        // },
         async getproducts() {
             try {
                 const res = await fetch('https://dorasitkmutt.ddns.net/api/show');
@@ -228,6 +214,7 @@ export default {
             }
         },
         async create(){
+            console.log(this.role)
             this.token = localStorage.token;
             this.resId = localStorage.resId;
             this.resRole = localStorage.resRole;
@@ -258,7 +245,6 @@ export default {
                     headers: { "Authorization" : `Bearer ${this.token}`}
                     })
                 const data = res.json();
-                console.log(data)
                 return data;
             }catch(e){
                 console.log (e)
@@ -288,8 +274,7 @@ export default {
         sortH2L() {
             this.selectedSort = 'Price : High to low'
             this.products.sort(function(a, b){return b.price-a.price})  
-        },
-        
+        }, 
     }
 }
 </script>

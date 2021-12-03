@@ -114,7 +114,6 @@ export default {
             selectedBrand: 'All Brand',
             selectedSort: 'unsorted',
             filterBrand: 0,
-
         }
     },
     mounted(){

@@ -101,7 +101,6 @@
             invalid_confirm: false,
         }
     },
-
     methods : {
         validating() {
             this.invalid_name = this.inputname === "" ? true : false;

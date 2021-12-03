@@ -17,16 +17,19 @@
                     <div class="form-group">
                         <label for="inputProductName"><b>PRODUCT NAME</b></label>
                         <input v-model="editproductname" type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag">
+                        <span v-if="invalid_productname" class="validate">Please input product name</span>
                     </div>
 
                     <div class="form-row" >
                         <div class="form-group col-lg-4">
                             <label for="inputPrice"><b>PRICE</b></label>
                             <input v-model="editprice" type="number" class="form-control" name="inputPrice" placeholder="999.00">
+                            <span v-if="invalid_price" class="validate">Please input price</span>
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputDate"><b>MANUFACTURE DATE</b></label>
                             <input v-model="editmanufacture" type="date" class="form-control" name="inputDate">
+                            <span v-if="invalid_manufacture" class="validate">Please input manufacturer date</span>
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputWarranty"><b>WARRANTY</b></label>
@@ -37,6 +40,7 @@
                                 <option value="30" :selected="editwarranty == 30">1 Month</option>
                                 <option value="0" :selected="editwarranty == 0">None</option>
                             </select>
+                            <span v-if="invalid_warranty" class="validate">Please select warranty</span>
                         </div>
                     </div>
 
@@ -44,6 +48,7 @@
                         <div class="form-group col-lg-6">
                             <label for="inputSize"><b>SIZE</b></label>
                             <input v-model="editsize" type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
+                            <span v-if="invalid_size" class="validate">Please input size</span>
                         </div>
                         <div class="form-group col-lg-6">
                             <label for="inputState"><b>BRAND</b></label>
@@ -55,6 +60,7 @@
                                 <option value="10005" :selected="editbrand == 10005">Lyn</option>
                                 <option value="10006" :selected="editbrand == 10006">Ysl</option>
                             </select>
+                            <span v-if="invalid_brand" class="validate">Please select brand</span>
                         </div>
                     </div>
 
@@ -62,6 +68,7 @@
                         <div class="form-group col-lg-12">
                             <label for="productDescription"><b>PRODUCT DESCRIPTION</b></label>
                             <textarea v-model="editdescription" class="form-control" name="productDescription" rows="6"></textarea>
+                            <span v-if="invalid_description" class="validate">Please input description</span>
                         </div>
                     </div>
 
@@ -76,7 +83,7 @@
                                 <label><b>COLOR & IMAGE</b></label>
                                 <div class="colornav-wrapper">
                                     <div v-for="sw in colorSwatch[formColor.index]" :key="sw.id">
-                                        <input type="radio" :name="'txtColor'+formColor.index" :id="sw.formid" :colorName="sw.colorName" :value="sw.id" :checked="false">
+                                        <input type="radio" :name="'txtColor'+formColor.index" :id="sw.formid" :colorName="sw.colorName" :value="sw.id" :checked="false" @click="addColor(sw,formColor.index-1)">
                                         <label class="colornav-link" :for="sw.formid" :colorCode="sw.colorCode"><span v-bind:style="{background: sw.bgColor}"></span></label>
                                     </div>
                                 </div>
@@ -84,14 +91,14 @@
 
                             <div class="row row-image-upload">
                                 <div class="form-group col-lg-12">
-                                    <cropperjs v-if="visibleComponent==='cropperjs'"></cropperjs>
+                                    <cropperjs v-if="visibleComponent==='cropperjs'" @image="addImage"></cropperjs>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-4" style="margin-top: 30px;">
                                     <label for="inputStock"><b>Stock</b></label>
-                                    <input type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
+                                    <input v-model="inputstock[formColor.index-1]" type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
                                 </div>
                             </div>
 
@@ -141,9 +148,9 @@
                 editdescription: "",
                 editpath: "",
                 // color and image
-                editcolor: [],
-                editimage: [],
-                editstock: [],
+                inputcolor: [],
+                inputimage: [],
+                inputstock: [],
                  //validate
                 invalid_productname: false,
                 invalid_price: false,
@@ -152,16 +159,16 @@
                 invalid_size: false,
                 invalid_brand: false,
                 invalid_description: false,
-                image: "",
+                // image: "",
                 img_style: "width:100%;",
-                indexFormColor: 3,
+                indexFormColor: 1,
                 colorSwatch: [],
                 formColor:[],
-                productcolors: [],
-                colors: [],
-                product_image: [],
-                product_stock: [],
-                product_color: [],
+                // productcolors: [],
+                // colors: [],
+                // product_image: [],
+                // product_stock: [],
+                // product_color: [],
 
                 visibleComponent: "cropperjs",
             }
@@ -186,6 +193,22 @@
 
         },
         methods : {
+            addImage(file) {
+                this.inputimage.push(file)
+            },
+            addColor(color,index) {
+                if(index == 0) {
+                    this.inputcolor[index] = color;
+                } else {
+                for(let i = 0; i < this.inputcolor.length; i++) {
+                    if(this.inputcolor[i].id == color.id) {
+                        alert('You have already selected this color.')
+                    } else {
+                        this.inputcolor[index] = color
+                    }
+                    }
+                }
+            },
         async getproduct() {
             try {
                 const res = await fetch("https://dorasitkmutt.ddns.net/api/show/" + this.id);
@@ -339,7 +362,40 @@
                 }
                 reader.readAsDataURL(files);
             },
+            validating() {
+                this.invalid_productname = this.editproductname === "" ? true : false;
+                this.invalid_price = this.editprice === 0 ? true : false;
+                this.invalid_manufacture = this.editmanufacture === "" ? true : false;
+                this.invalid_warranty = this.editwarranty === "" ? true : false;
+                this.invalid_size = this.editsize === "" ? true : false;
+                this.invalid_brand = this.editbrand === "" ? true : false;
+                this.invalid_description = this.editdescription === "" ? true : false;
+                setTimeout(() => {
+                    this.invalid_productname = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_price = false;
+                }, 5000);
+                setTimeout(() => {
+                this.invalid_manufacture = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_warranty = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_size = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_brand = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_description = false;
+                }, 5000);
+            },
         addFormColor(){
+                if(this.inputcolor.length != this.inputstock.length || this.inputcolor.length != this.inputimage.length || this.inputimage.length != this.inputstock.length || this.inputcolor.length == 0) {
+                    alert("Please full fill your form")
+                }
                 this.indexFormColor++
                 this.formColor.push({
                     index: this.indexFormColor,
@@ -347,27 +403,45 @@
                     visibleComponent: "cropperjs",
                     isDisplay: true,
                 })
-
+                this.showCancelForm = true
                 this.createColorSwatch(this.indexFormColor)
             },
-        cancelFormColor(obj){
-                if(confirm("ต้องการยกเลิกรายการสีและรูปภาพนี้?")){
+            cancelFormColor(obj){
+                if(confirm("Do you want to delete this form?")){
                     const frmColor = this.formColor.filter((tmp)=>{
-                        return tmp.index === obj.index;
+					return tmp.index === obj.index;
                     }).pop();
                     frmColor.visibleComponent = ""
                     frmColor.isDisplay = false
                 }
             },
         doEditProduct(){
+            this.validating();
+                if(this.invalid_productname == true || this.invalid_price == true || this.invalid_manufacture == true || this.invalid_warranty == true || this.invalid_size == true || this.invalid_brand == true || this.invalid_description == true) {
+                    return
+                } else {
             this.editpath = `productname=${this.editproductname}&price=${this.editprice}&warranty=${this.editwarranty}&menufacturrerdate=${this.editmanufacture}&description=${this.editdescription}&size=${this.editsize}&brandId=${this.editbrand}`;
-            fetch( `https://dorasitkmutt.ddns.net/api/edit/100001?${this.editpath}` , {
+            fetch( `https://dorasitkmutt.ddns.net/api/edit/${this.id}?${this.editpath}` , {
                 method: "PUT", 
                 headers: { "Authorization" : `Bearer ${this.token}`}
             })
+            for(let i = 0 ; i < this.inputcolor.length ; i++) {
+                    fetch( `https://dorasitkmutt.ddns.net/api/addColorImage?productid=${this.id}&colorid=${this.inputcolor[i].id}&stock=${this.inputstock[i]}&images=${this.inputimage[i].name}` , {
+                    method: "POST",
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                    
+                    })
+                    const formData = new FormData()
+                    formData.append('upload',this.inputimage[i])
+                    fetch( `https://dorasitkmutt.ddns.net/api/upload` , {
+                    method: "POST" , 
+                    headers: { "Authorization" : `Bearer ${this.token}`} ,
+                    body: formData
+                    })
+                }
             alert('You have edited a product!');
-            console.log("Edit Product!")
-            }
+                }
+            }   
         }
     }
 </script>

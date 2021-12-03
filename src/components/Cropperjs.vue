@@ -2,7 +2,6 @@
   <div>
     <input type="file" name="image[]" accept="image/*" style="font-size: 1.2em; padding: 10px 0;" @change="setImage">
     <br>
-
     <div style="width:100%:text-align:center;" v-if="hidden">
         <div style="width: 400px; height:300px; border: 1px solid gray;">
             <vue-cropper

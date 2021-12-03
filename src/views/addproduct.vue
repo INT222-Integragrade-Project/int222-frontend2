@@ -160,11 +160,6 @@
                         isDisplay: true,
                     },
                 ],
-                showModal: true,
-
-                imgSrc: "",
-                cropImg: '',
-                data: null,
                 token: '',
                 
             }
@@ -340,7 +335,7 @@
                 this.createColorSwatch(this.indexFormColor)
             },
             cancelFormColor(obj){
-                if(confirm("ต้องการยกเลิกรายการสีและรูปภาพนี้?")){
+                if(confirm("Do you want to delete this form?")){
                     const frmColor = this.formColor.filter((tmp)=>{
 					return tmp.index === obj.index;
                     }).pop();
@@ -383,7 +378,6 @@
                 alert("You have added a product!");
                 }
             },
-            
         }
     }
 </script>

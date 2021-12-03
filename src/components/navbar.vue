@@ -208,7 +208,7 @@
                             </button>
                         </div>
 
-                        <input type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" name="txtSearch" placeholder="search" value="" autocomplete="off">
+                        <input type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" name="txtSearch" placeholder="search" value="" autocomplete="off" >
 
                         <button type="button" class="btn btn-close-custom btn-light close-search" @click="toggleSearch"><i class="bi bi-x" style="font-size: 20px;"></i></button>
                     </div>
@@ -284,7 +284,6 @@
             },
         }
     }
-
 </script>
 
 <style>

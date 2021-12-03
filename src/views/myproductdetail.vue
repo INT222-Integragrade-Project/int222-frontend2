@@ -301,11 +301,13 @@ export default {
                 fetch(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}` , {
                 method:'DELETE'
                 })
+                fetch(`https://dorasitkmutt.ddns.net/api/deletefile?deleteimages=${obj.productId}` , {
+                method:'DELETE' ,
+                headers: { "Authorization" : `Bearer ${this.token}`}
+                })
                 alert('You have deleted a product!')
                 location.reload()
-                // fetch("http://104.215.139.17:3000/deletefile?imagesdelete=" +  this.product.images , {
-                // method:'DELETE'
-                // })
+                
             }
         }
   },

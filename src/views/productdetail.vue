@@ -292,7 +292,6 @@ export default {
           }
         }
       }
-
       this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${this.currentproduct[0].imageName}`
       this.stock = this.currentproduct[0].stock
     },
