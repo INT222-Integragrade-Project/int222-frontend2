@@ -42,7 +42,8 @@
 
             <div class="row">
                 <div class="col-md" style="text-align: center;">
-                    <p class="brand-name" style="margin-bottom: -0.5rem;">Anllo</p>
+                    <p class="brand-name" style="margin-bottom: -0.5rem;">{{selectedBrand}}</p>
+                    <span style="float:left;">{{selectedSort}}</span>
                 </div>
             </div>
             
@@ -54,13 +55,8 @@
                         <div class="btn-group" style="float:left;">
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownBrand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">BRAND</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownBrand">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Anello</a>
-                                <a class="dropdown-item">Chanel</a>
-                                <a class="dropdown-item">Dior</a>
-                                <a class="dropdown-item">Guicci</a>
-                                <a class="dropdown-item">Lyn</a>
-                                <a class="dropdown-item">Ysl</a>
+                                <a class="dropdown-item" @click="selectNone">None</a>
+                                <a class="dropdown-item" v-for="(brand, index) in brands" :key="index" @click="selectBrand(brand)">{{brand.brandName}}</a>
                             </div>
                         </div>
 
@@ -68,20 +64,7 @@
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownColor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">COLOR</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownColor">
                                 <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Blue</a>
-                                <a class="dropdown-item">Green</a>
-                                <a class="dropdown-item">Red</a>
-                                <a class="dropdown-item">Brown</a>
-                                <a class="dropdown-item">Black</a>
-                                <a class="dropdown-item">White</a>
-                                <a class="dropdown-item">Yellow</a>
-                                <a class="dropdown-item">Orange</a>
-                                <a class="dropdown-item">Sky Blue</a>
-                                <a class="dropdown-item">Gray</a>
-                                <a class="dropdown-item">Pink</a>
-                                <a class="dropdown-item">Cream</a>
-                                <a class="dropdown-item">Beige</a>
-                                <a class="dropdown-item">Purple</a>
+                                <a class="dropdown-item" v-for="(color, index) in colors" :key="index">{{color.colorName}}</a>
                             </div>
                         </div>
 
@@ -89,16 +72,16 @@
                         <div class="btn-group" style="float: right;">
                         <label class="btn dropdown-toggle" href="#" role="button" id="dropdownSortby" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">SORT BY PRICE</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownSortby">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Low to high</a>
-                                <a class="dropdown-item">High to low</a>
+                                <a class="dropdown-item" @click="sortNone">None</a>
+                                <a class="dropdown-item" @click="sortL2H">Low to high</a>
+                                <a class="dropdown-item" @click="sortH2L">High to low</a>
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
-                
+            
             <hr style="border:1px solid #C7BBE2;margin-top:0px;">
 
             <div class="product-content">
@@ -110,7 +93,7 @@
                         <router-link :to="{name:'productdetail' , params:{id:pd.productId}}" >
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="`https://www.dora.company/api/getfirstpic/${pd.productId}`">
+                                    <img :src="`https://dorasitkmutt.ddns.net/api/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -164,13 +147,24 @@ export default {
             displayShow: true,
             isNotLiked: true,
             isLiked: false,
-            sessId: 0,
+            ogproducts: [],
             products: [],
+            colors: [],
+            brands: [],
+            userfav: [],
+            token: '',
+            resId: 0,
+            resRole: '',
+            users: [],
+            user: Object,
             // favIdForDel: 0,
             // myFav: [],
-            // myFavProducts: [],
+            FavProducts: [],
             // favIdForDel: 0,
             // productcolorlist: [],
+            selectedBrand: 'All Brand',
+            selectedSort: '',
+            filterBrand: 0,
         }
     },
     mounted(){
@@ -178,8 +172,9 @@ export default {
     },
     methods: {
         addFav(obj) {
-            fetch( `https://www.dora.company/api/${this.sessId}/AddFav/?productId=${obj.productId}` , {
+            fetch( `https://dorasitkmutt.ddns.net/api/${this.resId}/AddFav/?productId=${obj.productId}` , {
                 method: "POST",
+                headers: { "Authorization" : `Bearer ${this.token}`}
                 })
         },
         // delFav(obj) {
@@ -197,9 +192,27 @@ export default {
         //         // window.location.reload();
         //     }
         // },
-        async getproduct() {
+        async getproducts() {
             try {
-                const res = await fetch('https://www.dora.company/api/show');
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/show');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        async getcolors() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showallcolor');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        async getbrands() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showbrand');
                 const data = res.json();
                 return data;
             }catch(e){
@@ -207,32 +220,85 @@ export default {
             }
         },
         async getFav() {
-            this.sessId = localStorage.sessId;
             try {
-                const res = await fetch(`https://www.dora.company/api/${this.sessId}/MyFav/`);
+                const res = await fetch(`https://dorasitkmutt.ddns.net/api/${this.resId}/MyFav/` , {
+                    method: "GET",
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                });
                 const data = res.json();
                 return data;
             }catch(e){
                 console.log (e)
             }
         },
-        // async getproductcolor() {
-        //     try {
-        //         const res = await fetch('https://www.dora.company/api/showproductcolor');
-        //         const data = res.json();
-        //         return data;
-        //     }catch(e){
-        //         console.log (e)
-        //     }
-        // },
-
         async create(){
-            this.products = await this.getproduct();
-            this.sessId = localStorage.sessId;
-            // this.productcolorlist = await this.getproductcolor();
-            console.log(this.sessId)
-            // console.log(this.productcolorlist)
+            this.token = localStorage.token;
+            this.resId = localStorage.resId;
+            this.resRole = localStorage.resRole;
+            this.products = await this.getproducts();
+            this.colors = await this.getcolors();
+            this.brands = await this.getbrands();
+            this.userfav = await this.getFav();
+            this.users = await this.getUsers();
+            for(let i = 0; i < this.users.length; i++) {
+                if(this.users[i].userId == this.resId) {
+                    this.user = this.users[i];
+                }
+            }
+            localStorage.setItem("username" , this.user.userName)
+            // console.log(this.userfav)
+            // console.log(this.users);
+            for(let i = 0; i < this.userfav.length; i++) {
+                for(let j = 0 ; j < this.products.length ; j++) {
+                    if(this.userfav[i].prouctId == this.products[j].productId) {
+                        return
+                    }
+                }
+            }
+
+            this.ogproducts = this.products;
+            
+            
         },
+        async getUsers() {
+            try {
+                const res = await fetch(`https://dorasitkmutt.ddns.net/api/showalluser` , {
+                    method: "GET"  ,
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                    })
+                const data = res.json();
+                console.log(data)
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        selectBrand(brand) {
+            this.products = this.ogproducts;
+            this.filterBrand = brand.brandId
+            this.selectedBrand = brand.brandName
+            this.products = this.products.filter(this.checkBrand)
+        },
+        selectNone() {
+            this.products = this.ogproducts;
+            this.selectedBrand = 'All Brand'
+        },
+        checkBrand(product) {
+            return product.brandId == this.filterBrand;
+        },
+        sortNone() {
+            this.selectedSort = ''
+            this.products.sort(function(a, b){return a.productId-b.productId})
+        },
+        sortL2H() {
+            this.selectedSort = 'Price : Low to high'
+            this.products.sort(function(a, b){return a.price-b.price})
+        },
+        sortH2L() {
+            this.selectedSort = 'Price : High to low'
+            this.products.sort(function(a, b){return b.price-a.price})  
+        },
+        
     }
 }
 </script>
@@ -278,7 +344,10 @@ export default {
     }
 
     .div-product-img img {
-        margin: auto;
+        object-fit: cover; 
+        width: 100%; 
+        height: 220px;
+        /* margin: auto; */
         display: block;
     }
 

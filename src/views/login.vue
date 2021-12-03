@@ -19,7 +19,9 @@
                         <div class="login-form">
                             <form @submit.prevent="doLogin">
                                 <input type="text" class="form-control login-input" v-model="username" name="txtUserName" placeholder="User Name">
+                                <span v-if="invalid_username" class="validate">Please input your username</span>
                                 <input type="password" class="form-control login-input" v-model="password" name="txtPassword" placeholder="Password">
+                                <span v-if="invalid_password" class="validate">Please input your password</span>
                                 <button type="submit" class="btn btn-login">Log In</button><br>
                             </form>
                             <hr style="margin-top:50px">
@@ -48,7 +50,9 @@
                             <!-- action ไปหน้าที่เข้าสู่ระบบ -->
                             <form @submit.prevent="doLogin">
                                 <input type="text" class="form-control login-input" v-model="username" name="txtUserName" placeholder="User Name">
+                                <span v-if="invalid_username" class="validate">Please input your username</span>
                                 <input type="password" class="form-control login-input" v-model="password" name="txtPassword" placeholder="Password">
+                                <span v-if="invalid_password" class="validate">Please input your password</span>
                                 <button type="submit" class="btn btn-login">Log In</button><br>
                             </form>
                             <hr style="margin-top:50px">
@@ -76,77 +80,76 @@
         components : {Navbar},
         data() {
             return {
-                user: [],
                 username: '',
                 password: '',
-                // username_mb: '',
-                // password_mb: '',
-                // test_user: 'admin',
-                // test_password: 'admin',
+                invalid_username: false,
+                invalid_password: false,
             }
         },
         mounted(){
-        this.create();
+        // this.create();
         },
         methods : {
             async doLogin() {
-
-                // var checkuser = false;
-                // for (let i = 0 ; i < this.user.length ; i++) {
-                //     if(this.user[i].username === this.username) {
-                //         checkuser = true;
-                //     } else {
-                //         checkuser = false;
-                //     }
-                // }
-                // console.log(checkuser);
-                // if(checkuser) {
-
-                // add validate --------------------------------------------------------------
-            fetch( `http://13.76.46.188:3000/login/?username=${this.username}&pwd=${this.password}` , {
-                method: "GET",
+                this.validating();
+                console.log(this.invalid_username)
+                if(this.invalid_username == true || this.invalid_password == true) {
+                    return
+                } else {
+                fetch( `https://dorasitkmutt.ddns.net/api/authenticate` , {
+                    method: "POST",
+                    headers: { "content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: this.username,
+                        password: this.password
+                        })
+                    })
+                    
+                    .then((response => {
+                        const res = response.json();
+                        return res;
+                        }
+                    ))
+                    .then(response => {
+                        console.log(response)
+                    
+                    if(!response.token) {
+                        alert("Your username or password is incorrect! Please try again")
+                    } else {
+                        localStorage.setItem("token", response.token);
+                        localStorage.setItem("resRole", response.role);
+                        localStorage.setItem("resId", response.userId);
+                        this.$router.push('product')
+                    }
                 })
-                .then((response => {
-                    const res = response.json();
-                    return res;
                 }
-                ))
-                .then(response => {
-                    // console.log(response);
-                    // console.log(response.role);
-                    // console.log(response.userName);
-                    localStorage.setItem("sessUsername", response.userName);
-                    localStorage.setItem("sessRole", response.role);
-                    localStorage.setItem("sessId", response.userId);
-                    this.$router.push('product') 
-                })
-                // } else {
-                //     alert("Invalid Username or Password. Please try it again.")
-                // }
-
-                // ดึงข้อมูลจาก database มาเช็คกับ user จาก input  
-                // if(this.username == this.test_user && this.password == this.test_password){
-                //     localStorage.setItem("sessUsername", this.username);
-                //     localStorage.setItem("sessRole", "customer");
-                //     this.$router.push('product') 
-                // } else {
-                //     alert("Invalid Username or Password. Please try it again.")
-                // }
-                // }
             },
-            async getuser() {
-            try {
-                const res = await fetch('http://13.76.46.188:3000/showuser');
-                const data = res.json();
-                return data;
-            }catch(e){
-                console.log (e)
-            }
+            validating() {
+            this.invalid_username = this.username === "" ? true : false;
+            this.invalid_password = this.password === "" ? true : false;
+            setTimeout(() => {
+                this.invalid_username = false;
+            }, 3000);
+            setTimeout(() => {
+                this.invalid_password = false;
+            }, 3000);
             },
-            async create() {
-                this.user = await this.getuser();
-                console.log(this.user);
-            }
+            // async getuser() {
+            // try {
+            //     const res = await fetch('https://dorasitkmutt.ddns.net/api/showuser' , {
+            //         // method: "GET" ,
+            //         headers: {"Authorization": "Bearer " + this.token} 
+            //         });
+            //     const data = res.json();
+            //     return data;
+            // }catch(e){
+            //     console.log (e)
+            // }
+            // },
+            // async create() {
+            //     this.user = await this.getuser();
+            //     console.log(this.user);
+            // }
         }
 	}
     
@@ -154,6 +157,11 @@
 
 
 <style>
+    .validate {
+    color : red;
+    margin-top: 0px;
+    }
+
     .bg-login {
         font-family: Kanit;
         background-image: url("../assets/image/app/BG.jpg");

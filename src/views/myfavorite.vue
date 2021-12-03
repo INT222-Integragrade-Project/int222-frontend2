@@ -9,6 +9,12 @@
                 </div>
             </div>
             
+            <div class="row">
+                <div class="col-md" style="text-align: center;">
+                    <span style="float:left;">{{selectedBrand}}  |  {{selectedSort}}</span>
+                </div>
+            </div>
+
             <hr style="border:1px solid #C7BBE2;margin-bottom:5px;">
             
             <div class="row">
@@ -17,13 +23,8 @@
                         <div class="btn-group" style="float:left;">
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownBrand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">BRAND</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownBrand">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Anello</a>
-                                <a class="dropdown-item">Chanel</a>
-                                <a class="dropdown-item">Dior</a>
-                                <a class="dropdown-item">Guicci</a>
-                                <a class="dropdown-item">Lyn</a>
-                                <a class="dropdown-item">Ysl</a>
+                                <a class="dropdown-item" @click="selectNone">None</a>
+                                <a class="dropdown-item" v-for="(brand, index) in brands" :key="index" @click="selectBrand(brand)">{{brand.brandName}}</a>
                             </div>
                         </div>
 
@@ -31,20 +32,7 @@
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownColor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">COLOR</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownColor">
                                 <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Blue</a>
-                                <a class="dropdown-item">Green</a>
-                                <a class="dropdown-item">Red</a>
-                                <a class="dropdown-item">Brown</a>
-                                <a class="dropdown-item">Black</a>
-                                <a class="dropdown-item">White</a>
-                                <a class="dropdown-item">Yellow</a>
-                                <a class="dropdown-item">Orange</a>
-                                <a class="dropdown-item">Sky Blue</a>
-                                <a class="dropdown-item">Gray</a>
-                                <a class="dropdown-item">Pink</a>
-                                <a class="dropdown-item">Cream</a>
-                                <a class="dropdown-item">Beige</a>
-                                <a class="dropdown-item">Purple</a>
+                                <a class="dropdown-item" v-for="(color, index) in colors" :key="index">{{color.colorName}}</a>
                             </div>
                         </div>
 
@@ -52,9 +40,9 @@
                         <div class="btn-group" style="float: right;">
                         <label class="btn dropdown-toggle" href="#" role="button" id="dropdownSortby" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">SORT BY PRICE</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownSortby">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Low to high</a>
-                                <a class="dropdown-item">High to low</a>
+                                <a class="dropdown-item" @click="sortNone">None</a>
+                                <a class="dropdown-item" @click="sortL2H">Low to high</a>
+                                <a class="dropdown-item" @click="sortH2L">High to low</a>
                             </div>
                         </div>
 
@@ -66,14 +54,14 @@
 
             <div class="product-content">
 
-                <div class="row justify-content-sm-center" style="margin:0px;">
+                <div class="row justify-content-sm-fit" style="margin:0px;">
 
                     <!-- Loop For Product -->
                     <div class="product-item" v-for="(pd, index) in myFavProducts" :key="index">
-                        <router-link to="/productdetail">
+                        <router-link :to="{name:'productdetail' , params:{id:pd.productId}}" >
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="`http://13.76.46.188:3000/getfirstpic/${pd.productId}`">
+                                    <img :src="`https://dorasitkmutt.ddns.net/api/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -113,13 +101,22 @@ import Navbar from "../components/navbar.vue"
 export default {
     name : "myfavorite",
     components : {Navbar},
+        props: {
+        product: {
+            type: Object,
+        },
+        id: {
+            type: String
+        }
+    },
     data() {
         return {
             // displayNone: false,
             // displayShow: true,
             // isNotLiked: true,
             // isLiked: false,
-            sessId: 0,
+            token: '',
+            resId: 0,
             myFav: [
                 // {
                 //     product_id: "100001",
@@ -130,20 +127,17 @@ export default {
                 // },
             ],
             products: [],
+            brands: [],
+            colors:[],
             myFavProducts: [],
+            ogFav: [],
             favIdForDel: 0,
+            selectedBrand: 'All Brand',
+            selectedSort: 'unsorted',
+            filterBrand: 0,
         }
     },
     methods: {
-        // confirmCancel: function(obj){
-        //     if (confirm("ต้องการยกเลิกการกดไลค์?")) {
-        //         obj.is_like = !obj.is_like
-        //         console.log(obj)
-        //         this.productData.splice(this.productData.indexOf(obj), 1);
-        //         console.log(this.productData);
-        //         return true;
-        //     }
-        // },
         delFav(obj) {
             if (confirm("Do you want to cancel this liked product?")) {
             for(let i = 0 ; i < this.myFav.length ; i++) {
@@ -153,17 +147,21 @@ export default {
                     break;
                 }
             }
-            fetch( `http://13.76.46.188:3000/${this.sessId}/DeleteFav/?favoriteId=${this.favIdForDel}` , {
+            fetch( `https://dorasitkmutt.ddns.net/api/${this.resId}/DeleteFav/?favoriteId=${this.favIdForDel}` , {
                 method: "DELETE",
+                headers: { "Authorization" : `Bearer ${this.token}`}
                 })
                 .then(() => location.reload())
                 console.log(obj.productId);
             }
         },
         async getFav() {
-            this.sessId = localStorage.sessId;
+            this.resId = localStorage.resId;
             try {
-                const res = await fetch(`http://13.76.46.188:3000/${this.sessId}/MyFav/`);
+                const res = await fetch(`https://dorasitkmutt.ddns.net/api/${this.resId}/MyFav/` , {
+                    method: "GET",
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                });
                 const data = res.json();
                 return data;
             }catch(e){
@@ -172,7 +170,25 @@ export default {
         },
         async getproducts() {
             try {
-                const res = await fetch('http://13.76.46.188:3000/show');
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/show');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        async getcolors() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showallcolor');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        async getbrands() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showbrand');
                 const data = res.json();
                 return data;
             }catch(e){
@@ -180,7 +196,10 @@ export default {
             }
         },
         async create() {
+            this.token = localStorage.token
             this.myFav = await this.getFav();
+            this.colors = await this.getcolors();
+            this.brands = await this.getbrands();
             this.products = await this.getproducts();
             for(let i = 0 ; i < this.myFav.length ; i++) {
                 for(let j = 0 ; j < this.products.length ; j++) {
@@ -190,8 +209,34 @@ export default {
                 }
                 // console.log(this.myFavProducts[i])
             }
-            // console.log(this.myFavProducts)
+            this.ogFav = this.myFavProducts
+            console.log(this.myFavProducts)
             // console.log(this.myFav);
+        },
+        selectBrand(brand) {
+            this.myFavProducts = this.ogFav;
+            this.filterBrand = brand.brandId
+            this.selectedBrand = brand.brandName
+            this.myFavProducts = this.myFavProducts.filter(this.checkBrand)
+        },
+        selectNone() {
+            this.myFavProducts = this.ogFav;
+            this.selectedBrand = 'All Brand'
+        },
+        checkBrand(product) {
+            return product.brandId == this.filterBrand;
+        },
+        sortNone() {
+            this.selectedSort = 'unsorted'
+            this.myFavProducts.sort(function(a, b){return a.productId-b.productId})
+        },
+        sortL2H() {
+            this.selectedSort = 'Price : Low to high'
+            this.myFavProducts.sort(function(a, b){return a.price-b.price})
+        },
+        sortH2L() {
+            this.selectedSort = 'Price : High to low'
+            this.myFavProducts.sort(function(a, b){return b.price-a.price})  
         },
     },
     mounted() {

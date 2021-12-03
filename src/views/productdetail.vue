@@ -7,7 +7,6 @@
 		</div>	 -->
 
     <!-- <ProductZoomer :base-images="images" :base-zoomer-options="zoomerOptions" /> -->
-    {{ data }}
     <div class="container" style="max-width: 1200px">
       <div class="row">
         <div class="col-md" style="text-align: center">
@@ -22,17 +21,8 @@
               <div class="col-md-4 row-vertical">
                 <div class="image-item-vertical">
                   <div class="row justify-content-center">
-                    <div
-                      class="image-item"
-                      v-for="item in productItem"
-                      :key="item.refname"
-                    >
-                      <img
-                        style="width: 100%"
-                        :ref="item.refname"
-                        :src="item.item_src"
-                        @click="selectImage(item.refname)"
-                      />
+                    <div class="image-item" v-for="product in currentproduct" :key="product.productColorId">
+                      <img style="width: 100%" :src="`https://dorasitkmutt.ddns.net/api/file/${product.imageName}`" :ref="product.imageName" @click="selectImage(product)"/>
                     </div>
                   </div>
                 </div>
@@ -41,27 +31,15 @@
               <div class="col-md-8">
                 <div class="product-frame">
                   <!-- <img :src="imageLocation" style="width:100%"> -->
-                  <vue-magnifier
-                    :src="imageLocation"
-                    :src-large="imageLocation"
-                  />
+                  <vue-magnifier :src="imageLocation" :src-large="imageLocation"/>
                 </div>
               </div>
 
               <div class="col-md-2 row-horizontal">
                 <div class="image-item-horizontal">
                   <!-- <div class="row justify-content-center"> -->
-                  <div
-                    class="image-item"
-                    v-for="item in productItem"
-                    :key="item.refname"
-                  >
-                    <img
-                      style="width: 100%"
-                      :ref="item.refname"
-                      :src="item.item_src"
-                      @click="selectImage(item.refname)"
-                    />
+                  <div class="image-item" v-for="product in currentproduct" :key="product.productColorId">
+                    <img style="width: 100%" :src="`https://dorasitkmutt.ddns.net/api/file/${product.imageName}`" :ref="product.imageName" @click="selectImage(product)"/>
                   </div>
                   <!-- </div> -->
                 </div>
@@ -74,8 +52,8 @@
               <div class="detail-title">{{ product.productName }}</div>
               <div class="detail-productid">ID : {{ product.productId }}</div>
 
-              <div class="detail-price">{{ product.price }} THB</div>
-              <div class="detail-amount">Amount 1000 pc.</div>
+              <div class="detail-price">{{ product.price }} THB &nbsp;</div>
+              <div class="detail-amount">Amount {{stock}} pc.</div>
 
               <div class="detail-description">
                 <div class="title">Detail</div>
@@ -106,26 +84,19 @@
 										<label class="colornav-link" for="radio-COLORCODE" colorCode="COLORCODE"><span id="color-COLORCODE" style="background-color: #COLORCODE;"></span></label> 
 									-->
 
-                  <div
-                    v-for="sw in colorSwatch"
-                    :key="sw.id"
-                    @click="onSelectColor(sw)"
-                  >
-                    <input
-                      type="radio"
-                      name="txtColor"
-                      :id="sw.formid"
-                      :colorName="sw.colorName"
-                      :value="sw.id"
-                    />
-                    <label
-                      class="colornav-link"
-                      :ref="sw.refItemName"
-                      :for="sw.formid"
-                      :colorCode="sw.colorCode"
-                      ><span v-bind:style="{ background: sw.bgColor }"></span
-                    ></label>
+                   <div v-for="sw in productColorSwatch" :key="sw.id" @click="onSelectColor(sw.id)">
+                    <input type="radio" name="txtColor" :id="sw.formid" :colorName="sw.colorName" :value="sw.id"/>
+                    <label class="colornav-link" :for="sw.formid" :colorCode="sw.colorCode">
+                      <span v-bind:style="{ background: sw.bgColor }"></span>
+                      </label>
                   </div>
+
+                  <!-- <div v-for="color in currentcolor" :key="color.colorId" @click="onSelectColor(color)">
+                    <input type="radio" name="txtColor" :id="'radio-'+color.colorId" :colorName="color.colorName" :value="color.colorId"/>
+                    <label class="colornav-link" :ref="currentproduct[color.colorId].imageName" :for="'radio-'+color.colorId" :colorCode="color.colorCode">
+                      <span v-bind:style="{ background: color.colorCode }"></span>
+                    </label>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -153,12 +124,11 @@ export default {
     return {
       colorSwatch: [
         {
-          id: "20001", // link
+          id: "20001",
           formid: "radio-B6B0E2",
           colorName: "Purple",
           colorCode: "B6B0E2",
           bgColor: "#B6B0E2",
-          refItemName: "imgItem1",
         },
         {
           id: "20002",
@@ -166,7 +136,6 @@ export default {
           colorName: "Blue",
           colorCode: "1B5893",
           bgColor: "#1B5893",
-          refItemName: "imgItem2",
         },
         {
           id: "20003",
@@ -174,7 +143,6 @@ export default {
           colorName: "Green",
           colorCode: "C9EFBD",
           bgColor: "#C9EFBD",
-          refItemName: "imgItem3",
         },
         {
           id: "20004",
@@ -182,7 +150,6 @@ export default {
           colorName: "Red",
           colorCode: "E95950",
           bgColor: "#E95950",
-          refItemName: "imgItem4",
         },
         {
           id: "20005",
@@ -190,7 +157,6 @@ export default {
           colorName: "Brown",
           colorCode: "B08266",
           bgColor: "#B08266",
-          refItemName: "imgItem5",
         },
         {
           id: "20006",
@@ -198,7 +164,6 @@ export default {
           colorName: "Black",
           colorCode: "24212A",
           bgColor: "#24212A",
-          refItemName: "imgItem6",
         },
         {
           id: "20007",
@@ -206,7 +171,6 @@ export default {
           colorName: "White",
           colorCode: "FFFFFF",
           bgColor: "#FFFFFF",
-          refItemName: "imgItem1",
         },
         {
           id: "20008",
@@ -214,7 +178,6 @@ export default {
           colorName: "Yellow",
           colorCode: "FFE383",
           bgColor: "#FFE383",
-          refItemName: "imgItem2",
         },
         {
           id: "20009",
@@ -222,7 +185,6 @@ export default {
           colorName: "Orange",
           colorCode: "FEB877",
           bgColor: "#FEB877",
-          refItemName: "imgItem3",
         },
         {
           id: "20010",
@@ -230,7 +192,6 @@ export default {
           colorName: "SkyBlue",
           colorCode: "C7F1FF",
           bgColor: "#C7F1FF",
-          refItemName: "imgItem4",
         },
         {
           id: "20011",
@@ -238,7 +199,6 @@ export default {
           colorName: "Gray",
           colorCode: "AEAEAD",
           bgColor: "#AEAEAD",
-          refItemName: "imgItem5",
         },
         {
           id: "20012",
@@ -246,7 +206,6 @@ export default {
           colorName: "Pink",
           colorCode: "FFDAF7",
           bgColor: "#FFDAF7",
-          refItemName: "imgItem6",
         },
         {
           id: "20013",
@@ -254,7 +213,6 @@ export default {
           colorName: "Cream",
           colorCode: "FFF4E2",
           bgColor: "#FFF4E2",
-          refItemName: "imgItem1",
         },
         {
           id: "20014",
@@ -262,12 +220,8 @@ export default {
           colorName: "Beige",
           colorCode: "EDD9BB",
           bgColor: "#EDD9BB",
-          refItemName: "imgItem2",
         },
       ],
-
-      imageLocation: require("../assets/image/product/Anello/PA1/PA1Green.png"),
-
       productItem: [ // mock up
         {
           refname: "imgItem1",
@@ -365,7 +319,7 @@ export default {
           item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
         },
       ],
-
+      productColorSwatch: [],
       spoilerShow: true,
       spoilerHide: false,
 
@@ -373,6 +327,8 @@ export default {
       productcolorlist: [],
       currentproduct: [],
       currentcolor: [],
+      imageLocation: '',
+      stock: 0,
     };
   },
   mounted() {
@@ -381,7 +337,7 @@ export default {
   methods: {
     async getproduct() {
       try {
-        const res = await fetch("https://www.dora.company/api/show/" + this.id);
+        const res = await fetch("https://dorasitkmutt.ddns.net/api/show/" + this.id);
         const data = res.json();
         return data;
       } catch (e) {
@@ -390,7 +346,7 @@ export default {
     },
     async getproductcolor() {
       try {
-        const res = await fetch("https://www.dora.company/api/showproductcolor");
+        const res = await fetch("https://dorasitkmutt.ddns.net/api/showproductcolor");
         const data = res.json();
         return data;
       } catch (e) {
@@ -399,52 +355,27 @@ export default {
     },
     async getcolor() {
       try {
-        const res = await fetch("https://www.dora.company/api/showallcolor");
+        const res = await fetch("https://dorasitkmutt.ddns.net/api/showallcolor");
         const data = res.json();
         return data;
       } catch (e) {
         console.log(e);
       }
     },
-
-    showSpoiler: function () {
-      this.spoilerShow = false;
-      this.spoilerHide = true;
+    onSelectColor(colorId) {
+      for(let i of this.currentproduct) {
+        if(colorId == i.colorId) {
+          this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${i.imageName}`
+          this.stock = i.stock
+        }
+      }
     },
-    onSelectColor: function (obj) {
-      var ref_item_name = obj.refItemName;
-      const pdItem = this.productItem
-        .filter((tmp) => {
-          return tmp.refname === ref_item_name;
-        })
-        .pop();
-      console.log(pdItem);
-      this.imageLocation = pdItem.item_src;
-      // console.log("เลือกสี แล้วแสดงรูป")
-    },
-    selectImage: function (refname) {
-      console.log(refname);
-      const pdItem = this.productItem
-        .filter((tmp) => {
-          return tmp.refname === refname;
-        })
-        .pop();
-      // console.log(this.$refs[refname].item_src)
-      this.imageLocation = pdItem.item_src;
+    selectImage(refname) {
+      this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${refname.imageName}`
+      this.stock = refname.stock
     },
     async create() {
       this.product = await this.getproduct();
-      this.color = await this.getcolor(); //loop for link productcolor and color
-      let a = 0;
-      for (let b = 0; b < this.color.length; b++) {
-        if (this.color[b].colorId != this.id) {
-          continue;
-        } else if (this.color[b].colorId == this.id) {
-          this.currentcolor[a] = this.color[b];
-        }
-        a++;
-        console.log(a); // just check
-      }
       this.productcolorlist = await this.getproductcolor();
       let j = 0;
       for (let i = 0; i < this.productcolorlist.length; i++) {
@@ -454,14 +385,33 @@ export default {
           this.currentproduct[j] = this.productcolorlist[i];
         }
         j++;
-        console.log(j); // just check
       }
-      console.log(this.product);
-      console.log(this.color);
+      this.color = await this.getcolor();
+      for (let b = 0; b < this.color.length; b++) {
+        for(let c = 0; c < this.currentproduct.length ; c++) {
+          if(this.color[b].colorId == this.currentproduct[c].colorId) {
+            this.currentcolor.push(this.color[b]);
+          }
+        }
+      }
+      for (let d = 0; d < this.colorSwatch.length; d++) {
+        for(let e = 0; e < this.currentcolor.length ; e++) {
+          if(this.colorSwatch[d].id == this.currentcolor[e].colorId) {
+            this.productColorSwatch.push(this.colorSwatch[d]);
+          }
+        }
+      }
+      console.log(this.productColorSwatch)
+      console.log(this.currentproduct)
+
+      this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${this.currentproduct[0].imageName}`
+      this.stock = this.currentproduct[0].stock
+      // console.log(this.product);
+      // console.log(this.color);
       // console.log(this.productcolorlist);
-      console.log(this.currentproduct);
-      console.log(this.colorSwatch);
-      console.log(this.currentcolor);
+      // console.log(this.currentproduct);
+      // console.log(this.colorSwatch);
+      // console.log(this.currentcolor);
     },
   },
 };

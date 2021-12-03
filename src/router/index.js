@@ -65,7 +65,7 @@ const routes = [
     component: addproduct
   },
   {
-    path: '/editproduct/:idforedit',
+    path: '/editproduct/:id',
     name: 'editproduct',
     props: true ,
     component: editproduct

@@ -126,13 +126,14 @@
         name : "editproduct",
         components : {Navbar, Cropperjs},
         props: {
-            idforedit: {
+            id: {
                 type: String,
                 required: true,
             },
         },
         data() {
             return {
+                token: '',
                 product: Object,
                 editproductname: "",
                 editprice: 0,
@@ -142,38 +143,37 @@
                 editbrand: "",
                 editdescription: "",
                 editpath: "",
-
+                // color and image
+                editcolor: [],
+                editimage: [],
+                editstock: [],
+                 //validate
+                invalid_productname: false,
+                invalid_price: false,
+                invalid_manufacture: false,
+                invalid_warranty: false,
+                invalid_size: false,
+                invalid_brand: false,
+                invalid_description: false,
                 image: "",
                 img_style: "width:100%;",
                 indexFormColor: 3, // index ของฟอร์มสินค้า // ถ้าข้อมูลมีหลายสี index จะเป็น จำนวนสินค้า id นี้
                 colorSwatch: [],
                 formColor:[],
-                productData: [],
-                productColorData: [],
+                productcolors: [],
+                colors: [],
+                product_image: [],
+                product_stock: [],
+                product_color: [],
 
                 visibleComponent: "cropperjs",
             }
         },
         mounted() {
             this.create();
-            // this.editproductname = this.product.productName;
-            // console.log(this.editproductname)
             // loop for รายการสีที่มี
             this.createColorSwatch(1)
-            this.createColorSwatch(2)
-            this.createColorSwatch(3)
-            
-            // this.productData = [{
-			// 	product_id: "100001",
-			// 	product_name: "ANELLO shoulder bag ALTON SIZE REG",
-			// 	product_price: 888.00,
-			// 	warranty: "7",
-			// 	manufacturrerdate: "2020-10-02",
-			// 	description: "ALTON A collection that brings together Anello's most popular material of all time, PU (synthetic leather) developed using a new material. that when touched, it gives a soft, smooth feeling durable and strong According to the main properties of PU (synthetic leather), it is also more lightweight. Anello has also selected a bag shape that is chic, chic, but still has a classic aura. Use earth tones, simple but elegant, easy to match with any outfit. Ready to enjoy traveling smoothly. There is a strap that can be rolled up for easy storage. Can be a Shopping Bag, easy to carry and convenient to use.",
-			// 	size: "29 x 32 cm",
-			// 	brandId: "10001",
-			// 	product_stock: 1000 
-			// }]
+
 
             this.formColor = [
                 {
@@ -186,50 +186,55 @@
                     stock: "1000",
                     imageName: require("../assets/image/product/Anello/PA1/PA1Green.png"),
                 },
-                // {
-                //     index: 2,
-                //     enableCancel: true,
-                //     visibleComponent: "cropperjs",
-                //     isDisplay: true,
-                //     productColorId: "110002",
-                //     colorId: "20011",
-                //     stock: "1000",
-                //     imageName: require("../assets/image/product/Anello/PA2/PA2Blue.png"),
-                // },
-                // {
-                //     index: 3,
-                //     enableCancel: true,
-                //     visibleComponent: "cropperjs",
-                //     isDisplay: true,
-                //     productColorId: "110003",
-                //     colorId: "20012",
-                //     stock: "1000",
-                //     imageName: require("../assets/image/product/Anello/PA3/PA3Black.png"),
-                // },
             ]
 
         },
         methods : {
         async getproduct() {
             try {
-                const res = await fetch("https://www.dora.company/api/show/100001");
+                const res = await fetch("https://dorasitkmutt.ddns.net/api/show/" + this.id);
                 const data = res.json();
                 return data;
             } catch (e) {
                 console.log(e);
-      }
-    },
-    async create() {
-      this.product = await this.getproduct();
-      this.editproductname = this.product.productName;
-      this.editprice = this.product.price;
-      this.editmanufacture = this.product.menufacturrerdate; //*****
-      this.editwarranty = this.product.warranty;
-      this.editsize = this.product.size;
-      this.editbrand = this.product.brandId;
-      this.editdescription = this.product.description;
-    },
-            createColorSwatch(index) {
+            }
+        },
+        async getproductcolor() {
+            try {
+                const res = await fetch("https://dorasitkmutt.ddns.net/api/showproductcolor");
+                const data = res.json();
+                return data;
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        async getcolor() {
+            try {
+                const res = await fetch("https://dorasitkmutt.ddns.net/api/showallcolor");
+                const data = res.json();
+                return data;
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        async create() {
+            this.token = localStorage.token;
+            this.productcolors = await this.getproductcolor();
+            this.colors = await this.getcolor();
+            this.product = await this.getproduct();
+            this.editproductname = this.product.productName;
+            this.editprice = this.product.price;
+            this.editmanufacture = this.product.menufacturrerdate;
+            this.editwarranty = this.product.warranty;
+            this.editsize = this.product.size;
+            this.editbrand = this.product.brandId;
+            this.editdescription = this.product.description;
+
+            // for() {
+
+            // }
+        },
+        createColorSwatch(index) {
                 this.colorSwatch[index] = [
                     {
                         id:"20001",
@@ -331,18 +336,18 @@
                     }
                 ]
             },
-            onFileChange: function(e){
+        onFileChange: function(e){
                 var files = e.target.files;
                 this.createImage(files[0]);
             },
-            createImage(files){
+        createImage(files){
                 var reader = new FileReader();
                 reader.onload=(e)=> {
                     this.image = e.target.result;
                 }
                 reader.readAsDataURL(files);
             },
-            addFormColor(){
+        addFormColor(){
                 this.indexFormColor++
                 this.formColor.push({
                     index: this.indexFormColor,
@@ -353,7 +358,7 @@
 
                 this.createColorSwatch(this.indexFormColor)
             },
-            cancelFormColor(obj){
+        cancelFormColor(obj){
                 if(confirm("ต้องการยกเลิกรายการสีและรูปภาพนี้?")){
                     const frmColor = this.formColor.filter((tmp)=>{
                         return tmp.index === obj.index;
@@ -364,13 +369,14 @@
                     // this.formColor.splice(this.formColor.indexOf(frmColor), 1);
                 }
             },
-            doEditProduct(){
-                this.editpath = `productname=${this.editproductname}&price=${this.editprice}&warranty=${this.editwarranty}&menufacturrerdate=${this.editmanufacture}&description=${this.editdescription}&size=${this.editsize}&brandId=${this.editbrand}`;
-                fetch( `https://www.dora.company/api/edit/100001?${this.editpath}` , {
-                method: "PUT",
-                })
-                console.log(this.editmanufacture)
-                console.log("Edit Product!")
+        doEditProduct(){
+            this.editpath = `productname=${this.editproductname}&price=${this.editprice}&warranty=${this.editwarranty}&menufacturrerdate=${this.editmanufacture}&description=${this.editdescription}&size=${this.editsize}&brandId=${this.editbrand}`;
+            fetch( `https://dorasitkmutt.ddns.net/api/edit/100001?${this.editpath}` , {
+                method: "PUT", 
+                headers: { "Authorization" : `Bearer ${this.token}`}
+            })
+            alert('You have edited a product!');
+            console.log("Edit Product!")
             }
         }
     }

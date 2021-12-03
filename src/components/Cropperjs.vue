@@ -1,13 +1,7 @@
 <template>
   <div>
     <!-- <h2 style="margin: 0;">Vue-CropperJS</h2> -->
-    <input
-      type="file"
-      name="image[]"
-      accept="image/*"
-      style="font-size: 1.2em; padding: 10px 0;"
-      @change="setImage"
-    >
+    <input type="file" name="image[]" accept="image/*" style="font-size: 1.2em; padding: 10px 0;" @change="setImage">
     <br>
     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal1">modal</button>
     <div class="modal fade" id="modal1" ref="modal1" tabindex="-1" aria-hidden="true" v-if="showModal" >
@@ -107,41 +101,24 @@
         },
         data() {
             return {
+                ogname: "",
+                ogtype: "",
                 imgSrc: "",
                 cropImg: "",
                 hidden: false,
                 show: true,
             };
         },
+        emits:['image'],
         mounted() {
             // for edit page ดึงข้อมูลจาก db 
             // this.cropImg = "http://localhost:8080/img/PD1Red.d96fd641.png"
         },
-        methods: {
-            uploadImage() {
-                const formData = new FormData();
-                const fileField = document.querySelector('input[type="file"]');
-
-                formData.append('imageName', 'abc123');
-                formData.append('file', fileField.files[0]);
-
-                fetch(`http://13.76.46.188:3000/upload`, {
-                  method: 'POST',
-                  body: formData
-                })
-                .then(response => response.json())
-                .then(result => {
-                  console.log('Success:', result);
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
-            },
-
-
-            
+        methods: {            
             setImage(e) {
                 const file = e.target.files[0];
+                console.log(file)
+                // this.$emit('image',file)
                 if (!file.type.includes("image/")) {
                     alert("Please select an image file");
                     return;
@@ -154,19 +131,35 @@
                         this.$refs.cropper.replace(event.target.result);
                     };
                     reader.readAsDataURL(file);
-
+                    this.ogname = file.name;
+                    this.ogtype = file.type;
                     this.hidden = true
                     this.show = false
-                    this.uploadImage();
+                    // this.uploadImage();
                 } else {
                     alert("Sorry, FileReader API not supported");
                 }
             },
             cropImage() {
                 // get image data for post processing, e.g. upload or setting image src
+                this.$refs.cropper.getCroppedCanvas().toBlob((x) => {
+                    // x.name = this.ogname
+                    const y = new File([x],this.randomString()+this.ogname.slice(this.ogname.lastIndexOf('.'),this.ogname.length),{type:this.ogtype})
+                    console.log(y)
+                    this.$emit('image',y)});
                 this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
                 this.hidden = false
                 this.show = true
+                // this.$emit('image',crop)
+            },
+            randomString() {
+            var length = 5,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*@!?",
+            retVal = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return retVal;
             },
             rotate() {
                 // guess what this does :)

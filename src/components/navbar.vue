@@ -16,6 +16,7 @@
 
         <!-- right -->
         <!-- สำหรับ user ที่มีการ login แล้ว -->
+        <div v-if="isAdmin">
             <li class="nav-menu-item-right-link margin-right-menu" v-if="displayNone">
                 <div class="menu-button" @click="toggleSidebar">
                     <a class="menu-link" style="cursor: pointer;">
@@ -23,6 +24,7 @@
                     </a>
                 </div>
             </li>
+        </div>
 
         <!-- ถ้าเป็น user ทั่วไป -->
         <li class="nav-menu-item-right-link margin-right-menu" v-if="displayShow">
@@ -45,7 +47,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-custom">
                     <label class="login-label-username">
-                        {{sessUsername}}
+                        {{username}}
                     </label>
                     <router-link to="/profile" class="dropdown-item nav-dropdown-item">Profile</router-link>
                     <button type="button" @click="doLogout" class="dropdown-item nav-dropdown-item">
@@ -101,6 +103,7 @@
 
         <!-- Right -->
         <!-- สำหรับ user ที่มีการ login แล้ว -->
+        <div v-if="isAdmin">
             <li class="nav-menu-mobile-right-img margin-right-menu" v-if="displayNone">
                 <div class="menu-button-500" @click="toggleSidebar">
                     <a class="menu-link" style="cursor: pointer;">
@@ -108,6 +111,7 @@
                     </a>
                 </div>
             </li>
+        </div>
         
         <!-- ถ้าเป็น user ทั่วไป -->
         <li class="nav-menu-mobile-right-img margin-right-menu" v-if="displayShow">
@@ -129,7 +133,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-custom">
                     <label class="login-label-username">
-                        {{sessUsername}}
+                        {{username}}
                     </label>
                     <router-link to="/profile" class="dropdown-item nav-dropdown-item">Profile</router-link>
                     <button type="button" @click="doLogout" class="dropdown-item nav-dropdown-item">
@@ -156,6 +160,7 @@
     </ul>
 
     <!-- Side bar Menu -->
+    <div v-if="isAdmin">
     <transition name="slide-fade" mode="in-out">
         <div class="sidebar-menu" v-show="isShowSidebar">
             <div class="row">
@@ -178,7 +183,7 @@
                 </div>
             </router-link>
 
-            <router-link to="/member">
+            <router-link to="/member" v-if="isSuperAdmin">
                 <div class="sidebar-icon">
                     <span class="material-icons">people_alt</span>
                     Members
@@ -187,6 +192,7 @@
         
         </div>
     </transition>
+    </div>
 
     <!-- Search Panel -->
     <div class="search-panel" :class="{show: isShowSearch}">
@@ -226,17 +232,22 @@
                 displayShow: true,
                 isShowSidebar: false,
                 isShowSearch: false,
-                sessUsername: '',
-                sessRole: '',
+                username: '',
+                role: '',
+                users: [],
+                user: '',
+                resId: '',
+                isAdmin: false,
+                isSuperAdmin: false,
             }
         },
         mounted() {
             // ถ้ามีการ Login เข้ามา
-            if (localStorage.sessUsername) {
-                this.sessUsername = localStorage.sessUsername;
-                this.sessRole = localStorage.sessRole;
-                console.log(this.sessUsername);
-                console.log(this.sessRole);
+            if (localStorage.token) {
+                this.username = localStorage.username;
+                this.role = localStorage.resRole;
+                console.log(this.username)
+                console.log(this.role)
                 if(this.displayNone){
                     this.displayNone = false;
                 } else {
@@ -248,6 +259,12 @@
                 } else {
                     this.displayShow = true;
                 }
+            }
+            if(this.role == "superadmin") {
+                this.isSuperAdmin = true;
+            }
+            if(this.role == "admin" || this.role == "superadmin") {
+                this.isAdmin = true;
             }
         },
         methods : {

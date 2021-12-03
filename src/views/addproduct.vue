@@ -17,16 +17,19 @@
                     <div class="form-group">
                         <label for="inputProductName"><b>PRODUCT NAME</b></label>
                         <input v-model="inputproductname" type="text" class="form-control" name="inputProductName" placeholder="GG Marmont crossbody bag">
+                        <span v-if="invalid_productname" class="validate">Please input product name</span>
                     </div>
 
                     <div class="form-row" >
                         <div class="form-group col-lg-4">
                             <label for="inputPrice"><b>PRICE</b></label>
                             <input v-model="inputprice" type="number" class="form-control" name="inputPrice" placeholder="999.00">
+                            <span v-if="invalid_price" class="validate">Please input price</span>
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputDate"><b>MANUFACTURE DATE</b></label>
                             <input v-model="inputmanufacture" type="date" class="form-control" name="inputDate">
+                            <span v-if="invalid_manufacture" class="validate">Please input manufacturer date</span>
                         </div>
                         <div class="form-group col-lg-4">
                             <label for="inputWarranty"><b>WARRANTY</b></label>
@@ -37,6 +40,7 @@
                                 <option value="30">1 Month</option>
                                 <option value="0">None</option>
                             </select>
+                            <span v-if="invalid_warranty" class="validate">Please select warranty</span>
                         </div>
                     </div>
 
@@ -44,6 +48,7 @@
                         <div class="form-group col-lg-6">
                             <label for="inputSize"><b>SIZE</b></label>
                             <input v-model="inputsize" type="text" class="form-control" name="inputSize" placeholder="25 X 17 X 9 CM">
+                            <span v-if="invalid_size" class="validate">Please input size</span>
                         </div>
                         <div class="form-group col-lg-6">
                             <label for="inputState"><b>BRAND</b></label>
@@ -55,6 +60,7 @@
                                 <option value="10005">Lyn</option>
                                 <option value="10006">Ysl</option>
                             </select>
+                            <span v-if="invalid_brand" class="validate">Please select brand</span>
                         </div>
                     </div>
 
@@ -62,6 +68,7 @@
                         <div class="form-group col-lg-12">
                             <label for="productDescription"><b>PRODUCT DESCRIPTION</b></label>
                             <textarea v-model="inputdescription" class="form-control" name="productDescription" rows="6"></textarea>
+                            <span v-if="invalid_description" class="validate">Please input description</span>
                         </div>
                     </div>
 
@@ -79,7 +86,7 @@
                                 <label><b>COLOR & IMAGE</b></label>
                                 <div class="colornav-wrapper">
                                     <div v-for="sw in colorSwatch[formColor.index]" :key="sw.id">
-                                        <input type="radio" :name="'txtColor'+formColor.index" :id="sw.formid" :colorName="sw.colorName" :value="sw.id">
+                                        <input type="radio" :name="'txtColor'+formColor.index" :id="sw.formid" :colorName="sw.colorName" :value="sw.id" @click="addColor(sw,formColor.index-1)">
                                         <label class="colornav-link" :for="sw.formid" :colorCode="sw.colorCode"><span v-bind:style="{background: sw.bgColor}"></span></label>
                                     </div>
                                 </div>
@@ -87,14 +94,14 @@
 
                             <div class="row row-image-upload">
                                 <div class="form-group col-lg-12">
-                                    <cropperjs v-if="formColor.visibleComponent==='cropperjs'"></cropperjs>
+                                    <cropperjs v-if="formColor.visibleComponent==='cropperjs'" @image="addImage"></cropperjs>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-4" style="margin-top: 30px;">
                                     <label for="inputStock"><b>Stock</b></label>
-                                    <input v-model="inputstock" type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
+                                    <input v-model="inputstock[formColor.index-1]" type="number" class="form-control" id="inputStock0" name="inputStock[]" min="0">
                                 </div>
                             </div>
 
@@ -139,6 +146,14 @@
                 inputcolor: [],
                 inputimage: [],
                 inputstock: [],
+                //validate
+                invalid_productname: false,
+                invalid_price: false,
+                invalid_manufacture: false,
+                invalid_warranty: false,
+                invalid_size: false,
+                invalid_brand: false,
+                invalid_description: false,
 
                 indexFormColor: 1,
                 colorSwatch: [],
@@ -155,13 +170,71 @@
                 imgSrc: "",
                 cropImg: '',
                 data: null,
+                token: '',
                 
             }
         },
         mounted() {
             this.createColorSwatch(1)
+            this.create();
         },
         methods : {
+            create() {
+                this.token = localStorage.token;
+                console.log(this.token)
+            },
+            addImage(file) {
+                this.inputimage.push(file)
+                console.log(this.inputimage);
+            },
+            addColor(color,index) {
+                console.log(index)
+                if(index == 0) {
+                    this.inputcolor[index] = color;
+                } else {
+                for(let i = 0; i < this.inputcolor.length; i++) {
+                    if(this.inputcolor[i].id == color.id) {
+                        console.log(this.inputcolor[i].id)
+                        console.log(color.id)
+                        alert('You have already selected this color.')
+                    } else {
+                        this.inputcolor[index] = color
+                    }
+                }
+            }
+                console.log(this.inputcolor);
+                console.log(this.inputstock);
+            },
+            validating() {
+                this.invalid_productname = this.inputproductname === "" ? true : false;
+                this.invalid_price = this.inputprice === 0 ? true : false;
+                this.invalid_manufacture = this.inputmanufacture === "" ? true : false;
+                this.invalid_warranty = this.inputwarranty === "" ? true : false;
+                this.invalid_size = this.inputsize === "" ? true : false;
+                this.invalid_brand = this.inputbrand === "" ? true : false;
+                this.invalid_description = this.inputdescription === "" ? true : false;
+                setTimeout(() => {
+                    this.invalid_productname = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_price = false;
+                }, 5000);
+                setTimeout(() => {
+                this.invalid_manufacture = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_warranty = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_size = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_brand = false;
+                }, 5000);
+                setTimeout(() => {
+                    this.invalid_description = false;
+                }, 5000);
+            },
             createColorSwatch(index) {
                 this.colorSwatch[index] = [
                     {
@@ -265,6 +338,9 @@
                 ]
             },
             addFormColor(){
+                if(this.inputcolor.length != this.inputstock.length || this.inputcolor.length != this.inputimage.length || this.inputimage.length != this.inputstock.length || this.inputcolor.length == 0) {
+                    return 
+                }
                 this.indexFormColor++
                 this.formColor.push({
                     index: this.indexFormColor,
@@ -287,11 +363,15 @@
                 }
             },
             doAddProduct(){
-                // this.uploadImage(this.addImage);
+                this.validating();
+                if(this.invalid_productname == true || this.invalid_price == true || this.invalid_manufacture == true || this.invalid_warranty == true || this.invalid_size == true || this.invalid_brand == true || this.invalid_description == true) {
+                    return
+                } else {
                 this.req1 = `productname=${this.inputproductname}&price=${this.inputprice}&warranty=${this.inputwarranty}&menufacturrerdate=${this.inputmanufacture}&description=${this.inputdescription}&size=${this.inputsize}&brandId=${this.inputbrand}`;
-                fetch( `http://13.76.46.188:3000/add?${this.req1}` , {
+                fetch( `https://dorasitkmutt.ddns.net/api/add?${this.req1}` , {
                 method: "POST",
-                })
+                headers: { "Authorization" : `Bearer ${this.token}`}
+                    })
                 .then((response => {
                     const res = response.json();
                     return res;
@@ -299,38 +379,37 @@
                 ))
                 .then(response => {
                     console.log(response); // ready use
-                    this.req2 = `productid=${response}&colorid=${this.inputcolor}&stock=${this.inputstock}&images=${this.inputimage}`
+                    for(let i = 0 ; i < this.inputcolor.length ; i++) {
+                    fetch( `https://dorasitkmutt.ddns.net/api/addColorImage?productid=${response}&colorid=${this.inputcolor[i].id}&stock=${this.inputstock[i]}&images=${this.inputimage[i].name}` , {
+                    method: "POST",
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                    
+                    })
+                    const formData = new FormData()
+                    formData.append('upload',this.inputimage[i])
+                    fetch( `https://dorasitkmutt.ddns.net/api/upload` , {
+                    method: "POST" , 
+                    headers: { "Authorization" : `Bearer ${this.token}`} ,
+                    body: formData
+                    })
+                }
                 })
-                // .catch((error) => console.log(error));
-                
-                fetch( `http://13.76.46.188:3000/addColorImage?${this.req2}` , {
-                method: "POST",
-                })
+                .catch((error) => console.log(error));
                 console.log("Add Product!")
-                console.log(this.inputproductname)
-                console.log(this.inputprice)
-                console.log(this.inputmanufacture)
-                console.log(this.inputwarranty)
-                console.log(this.inputsize)
-                console.log(this.inputbrand)
-                console.log(this.inputdescription)
-                console.log(this.inputstock)
-                console.log("===========")
-                console.log(this.req1)
-                console.log(this.req2)
+                // console.log(this.inputproductname)
+                // console.log(this.inputprice)
+                // console.log(this.inputmanufacture)
+                // console.log(this.inputwarranty)
+                // console.log(this.inputsize)
+                // console.log(this.inputbrand)
+                // console.log(this.inputdescription)
+                // console.log(this.inputstock)
+                // console.log("===========")
+                // console.log(this.req1)
+                // console.log(this.req2)
                 alert("You have added a product!");
+                }
             },
-            // uploadimage(images) {
-            //     for(let i = 0; i < images.length; i++) {
-            //         let data = new FormDate();
-            //         data.append("apple" , images[i]);
-            //         axios
-            //             .post(inputimage,data)
-            //             .then(response => {
-            //                 console.log(response)
-            //             })
-            //     }
-            // }
             
         }
     }
