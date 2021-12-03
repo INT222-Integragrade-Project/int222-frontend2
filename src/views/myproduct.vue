@@ -173,29 +173,29 @@ export default {
             }
         },
         selectBrand(brand) {
-            this.myFavProducts = this.ogFav;
+            this.productlist = this.ogProductlist;
             this.filterBrand = brand.brandId
             this.selectedBrand = brand.brandName
-            this.myFavProducts = this.myFavProducts.filter(this.checkBrand)
+            this.productlist = this.productlist.filter(this.checkBrand)
         },
         selectNone() {
-            this.myFavProducts = this.ogFav;
+            this.productlist = this.ogProductlist;
             this.selectedBrand = 'All Brand'
         },
         checkBrand(product) {
             return product.brandId == this.filterBrand;
         },
         sortNone() {
-            this.selectedSort = 'unsorted'
-            this.myFavProducts.sort(function(a, b){return a.productId-b.productId})
+            this.selectedSort = ''
+            this.productlist.sort(function(a, b){return a.productId-b.productId})
         },
         sortL2H() {
             this.selectedSort = 'Price : Low to high'
-            this.myFavProducts.sort(function(a, b){return a.price-b.price})
+            this.productlist.sort(function(a, b){return a.price-b.price})
         },
         sortH2L() {
             this.selectedSort = 'Price : High to low'
-            this.myFavProducts.sort(function(a, b){return b.price-a.price})  
+            this.productlist.sort(function(a, b){return b.price-a.price}) 
         },
     }
 }
