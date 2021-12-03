@@ -89,7 +89,6 @@
         methods : {
             async doLogin() {
                 this.validating();
-                console.log(this.invalid_username)
                 if(this.invalid_username == true || this.invalid_password == true) {
                     return
                 } else {

@@ -76,16 +76,16 @@
         </li>
 
         <li class="nav-menu-item-right">
-            <form action="#search" method="get">
+            <!-- <form method="get"> -->
                 <div class="input-group">
-                    <input type="text" class="form-control form-search-custom" id="txtSearch" name="txtSearch" value="">
+                    <input v-model="search" @keyup="$emit('search',search)" type="text" class="form-control form-search-custom" id="txtSearch">
                     <span class="input-group-append">
                         <button class="btn btn-outline-secondary btn-outline-secondary-custom border-left-0">
                             <i class="bi bi-search"></i>
                         </button>
                     </span>
                 </div>
-            </form>
+            <!-- </form> -->
         </li>
 
     </ul>
@@ -203,7 +203,7 @@
         <div class="row">
             <div class="col-md" style="text-align: center;">
 
-                <form action="#search" method="get">
+                <!-- <form action="search" method="get"> -->
                     <div class="input-group-search">
 
                         <div class="prefix-search-input">
@@ -212,13 +212,13 @@
                             </button>
                         </div>
 
-                        <input type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" name="txtSearch" placeholder="search" value="" autocomplete="off" >
+                        <input v-model="search" @keypress.enter="$emit('search',search) ; toggleSearch()" type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" placeholder="search" autocomplete="off" >
 
                         <button type="button" class="btn btn-close-custom btn-light close-search" @click="toggleSearch"><i class="bi bi-x" style="font-size: 20px;"></i></button>
                     </div>
                         
 
-                </form>
+                <!-- </form> -->
 
             </div>
         </div>
@@ -230,6 +230,7 @@
     
     export default {
         name : "navbar",
+        emits: ['search'],
         data() {
             return {
                 displayNone: false,
@@ -244,7 +245,18 @@
                 isAdmin: false,
                 isSuperAdmin: false,
                 isshowfav: false,
+                search: '',
             }
+        },
+        computed: {
+            searching() {
+                this.$emit("search",this.search)
+                console.log(this.search)
+            //     return this.image.filter((member) => {
+            //         return member.title.toLowerCase().includes(this.form.text.toLowerCase());
+            // });
+            return '';
+        },
         },
         mounted() {
             if (localStorage.token) {

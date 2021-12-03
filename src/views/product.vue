@@ -1,6 +1,6 @@
 <template>
     <div class="product">
-     <navbar></navbar>   
+     <navbar @search="searchproduct"></navbar>   
         <div class="container" style="max-width: 1200px;">
             
             <div class="row">
@@ -214,7 +214,6 @@ export default {
             }
         },
         async create(){
-            console.log(this.role)
             this.token = localStorage.token;
             this.resId = localStorage.resId;
             this.resRole = localStorage.resRole;
@@ -274,7 +273,16 @@ export default {
         sortH2L() {
             this.selectedSort = 'Price : High to low'
             this.products.sort(function(a, b){return b.price-a.price})  
-        }, 
+        },
+        searchproduct(search) {
+            if(search == '') {
+                return this.products = this.ogproducts
+            }
+            this.products = this.products.filter(list => {
+                list = list.productName.toLowerCase()
+                return list.indexOf(search.toLowerCase()) > -1
+            })
+        }
     }
 }
 </script>
