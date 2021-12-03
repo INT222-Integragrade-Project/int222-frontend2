@@ -130,7 +130,7 @@
         },
         register() {
             if(this.invalid_username == true || this.invalid_name == true || this.invalid_lastname == true || this.invalid_password == true || this.invalid_confirm == true) {
-                this.validating(); //return
+                this.validating();
             } else {
             fetch( `https://dorasitkmutt.ddns.net/api/register/?username=${this.inputusername}&firstname=${this.inputname}&lastname=${this.inputlastname}&password=${this.inputpwd}` , {
                 method : "POST" ,
@@ -148,15 +148,8 @@
                     alert("Register success!!");
                     location.reload();
                 }
-                console.log(response);
             })
             }
-
-            // console.log(this.inputusername);
-            // console.log(this.inputname);
-            // console.log(this.inputlastname);
-            // console.log(this.inputpwd);
-            // console.log(this.inputconfirm);
         }
     },
 	}

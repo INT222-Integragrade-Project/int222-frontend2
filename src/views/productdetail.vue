@@ -60,9 +60,6 @@
 
                 <p style="text-indent: 2em; text-align: justify">
                     {{ product.description }}
-                  <!-- <a class="spoiler" v-if="spoilerShow" @click="showSpoiler"
-                    >read more..</a
-                  > -->
                 </p>
 
                 <div class="title">Size</div>
@@ -79,10 +76,6 @@
                 <label for="coloranfimage"><b>Color</b></label
                 ><span id="color-selected"></span><br />
                 <div class="colornav-wrapper">
-                  <!-- 
-										<input type="radio" name="txtColor[]" id="radio-COLORCODE" colorName="COLORNAME" value="COLORID">
-										<label class="colornav-link" for="radio-COLORCODE" colorCode="COLORCODE"><span id="color-COLORCODE" style="background-color: #COLORCODE;"></span></label> 
-									-->
 
                    <div v-for="sw in productColorSwatch" :key="sw.id" @click="onSelectColor(sw.id)">
                     <input type="radio" name="txtColor" :id="sw.formid" :colorName="sw.colorName" :value="sw.id"/>
@@ -91,12 +84,6 @@
                       </label>
                   </div>
 
-                  <!-- <div v-for="color in currentcolor" :key="color.colorId" @click="onSelectColor(color)">
-                    <input type="radio" name="txtColor" :id="'radio-'+color.colorId" :colorName="color.colorName" :value="color.colorId"/>
-                    <label class="colornav-link" :ref="currentproduct[color.colorId].imageName" :for="'radio-'+color.colorId" :colorCode="color.colorCode">
-                      <span v-bind:style="{ background: color.colorCode }"></span>
-                    </label>
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -222,103 +209,7 @@ export default {
           bgColor: "#EDD9BB",
         },
       ],
-      productItem: [ // mock up
-        {
-          refname: "imgItem1",
-          name: "PA1Green.png",
-          item_src: require("../assets/image/product/Anello/PA1/PA1Green.png"),
-        },
-        {
-          refname: "imgItem2",
-          name: "PA2Blue.png",
-          item_src: require("../assets/image/product/Anello/PA2/PA2Blue.png"),
-        },
-        {
-          refname: "imgItem3",
-          name: "PA3Black.png",
-          item_src: require("../assets/image/product/Anello/PA3/PA3Black.png"),
-        },
-        {
-          refname: "imgItem4",
-          name: "PD1Red.png",
-          item_src: require("../assets/image/product/Dior/PD1/PD1Red.png"),
-        },
-        {
-          refname: "imgItem5",
-          name: "PD2White.png",
-          item_src: require("../assets/image/product/Dior/PD2/PD2White.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-        {
-          refname: "imgItem6",
-          name: "PD4Green.png",
-          item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-        },
-      ],
+
       productColorSwatch: [],
       spoilerShow: true,
       spoilerHide: false,
@@ -401,17 +292,9 @@ export default {
           }
         }
       }
-      console.log(this.productColorSwatch)
-      console.log(this.currentproduct)
 
       this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${this.currentproduct[0].imageName}`
       this.stock = this.currentproduct[0].stock
-      // console.log(this.product);
-      // console.log(this.color);
-      // console.log(this.productcolorlist);
-      // console.log(this.currentproduct);
-      // console.log(this.colorSwatch);
-      // console.log(this.currentcolor);
     },
   },
 };

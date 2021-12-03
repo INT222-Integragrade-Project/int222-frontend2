@@ -14,12 +14,9 @@
                 <div class="col-md" style="text-align: center;">
 
                     <div class="my-profile">
-                        <!-- action ไปหน้า update profile  -->
-                        <!-- <form action="#" method="post"> -->
                             
                             <div class="row">
                                 <div class="col-md">
-                                    <!-- รูป Account -->
                                     <span class="material-icons-outlined" style="font-size:120px;color:#888888;">account_circle</span>
                                 </div>
                             </div>
@@ -86,7 +83,6 @@
 
                             </div>
 
-                        <!-- </form> -->
 
                     </div>
                 </div>
@@ -104,13 +100,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
 
-                    <!-- <form action="#updateprofile" method="get"> -->
 
                         <input type="hidden" name="txtSubmitType" :value="submitType">
 
                         <div class="row">
                             <div class="col-md" style="margin:30px auto; text-align: center;">
-                                <!-- รูป Account -->
                                 <span class="material-icons-outlined" style="font-size:120px;color:#888888;">account_circle</span>
                                 <br>
                                 <label>{{userName}}</label>
@@ -151,7 +145,6 @@
 
                         </div>
                         
-                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -275,7 +268,6 @@
                     headers: { "Authorization" : `Bearer ${this.token}`}
                     })
                     alert('You have been edit profile');
-                    console.log("Edit Profile!")
                 }
             },
             changePwd(){
@@ -299,13 +291,11 @@
                             alert("Your current password is incorrect!");
                         } else {
                         alert('You have been change password');
-                        console.log("Change Password!")
                         }
                     })
                 }
             },
             deleteAccount() {
-                // console.log(this.user.role)
                 if(this.user.role == 'superadmin') {
                     alert('You can not delete this account!');
                 } else {
@@ -317,14 +307,12 @@
                     alert('You have deleted your account');
                     localStorage.clear();
                     location.reload();
-                    console.log(" Delete Account!")
                     }
                 }
             },
             async create() {
                 this.token = localStorage.token
                 this.user = await this.getUser();
-                // console.log(this.user)
                 this.userName = this.user.userName;
                 this.editusername = this.user.userName;
                 this.editfirstname = this.user.name;

@@ -72,12 +72,9 @@
                         </div>
                     </div>
 
-                    <!-- ส่วนของฟอร์ม สี + รูป + Stock //เพิ่มได้โดยการกด Add -->
                     <div class="formColorContent" v-for="(formColor, counter) in formColor" v-bind:key="counter">
 
                         <div v-if="formColor.isDisplay">
-                            <!-- <label><b>[ Order: {{formColor.index}} ]</b></label> -->
-
                             <div class="cancel-form-color" @click="cancelFormColor(formColor)" v-if="formColor.enableCancel">
                                 <button type="button" class="btn btn-outline-dark"><span class="material-icons-outlined">close</span></button>
                             </div>
@@ -142,11 +139,9 @@
                 inputsize: "",
                 inputbrand: "",
                 inputdescription: "",
-                // color and image
                 inputcolor: [],
                 inputimage: [],
                 inputstock: [],
-                //validate
                 invalid_productname: false,
                 invalid_price: false,
                 invalid_manufacture: false,
@@ -181,29 +176,22 @@
         methods : {
             create() {
                 this.token = localStorage.token;
-                console.log(this.token)
             },
             addImage(file) {
                 this.inputimage.push(file)
-                console.log(this.inputimage);
             },
             addColor(color,index) {
-                console.log(index)
                 if(index == 0) {
                     this.inputcolor[index] = color;
                 } else {
                 for(let i = 0; i < this.inputcolor.length; i++) {
                     if(this.inputcolor[i].id == color.id) {
-                        console.log(this.inputcolor[i].id)
-                        console.log(color.id)
                         alert('You have already selected this color.')
                     } else {
                         this.inputcolor[index] = color
                     }
+                    }
                 }
-            }
-                console.log(this.inputcolor);
-                console.log(this.inputstock);
             },
             validating() {
                 this.invalid_productname = this.inputproductname === "" ? true : false;
@@ -339,7 +327,7 @@
             },
             addFormColor(){
                 if(this.inputcolor.length != this.inputstock.length || this.inputcolor.length != this.inputimage.length || this.inputimage.length != this.inputstock.length || this.inputcolor.length == 0) {
-                    return 
+                    alert("Please full fill your form")
                 }
                 this.indexFormColor++
                 this.formColor.push({
@@ -356,10 +344,8 @@
                     const frmColor = this.formColor.filter((tmp)=>{
 					return tmp.index === obj.index;
                     }).pop();
-                    console.log(frmColor)
                     frmColor.visibleComponent = ""
                     frmColor.isDisplay = false
-                    // this.formColor.splice(this.formColor.indexOf(frmColor), 1);
                 }
             },
             doAddProduct(){
@@ -378,7 +364,6 @@
                 }
                 ))
                 .then(response => {
-                    console.log(response); // ready use
                     for(let i = 0 ; i < this.inputcolor.length ; i++) {
                     fetch( `https://dorasitkmutt.ddns.net/api/addColorImage?productid=${response}&colorid=${this.inputcolor[i].id}&stock=${this.inputstock[i]}&images=${this.inputimage[i].name}` , {
                     method: "POST",
@@ -395,18 +380,6 @@
                 }
                 })
                 .catch((error) => console.log(error));
-                console.log("Add Product!")
-                // console.log(this.inputproductname)
-                // console.log(this.inputprice)
-                // console.log(this.inputmanufacture)
-                // console.log(this.inputwarranty)
-                // console.log(this.inputsize)
-                // console.log(this.inputbrand)
-                // console.log(this.inputdescription)
-                // console.log(this.inputstock)
-                // console.log("===========")
-                // console.log(this.req1)
-                // console.log(this.req2)
                 alert("You have added a product!");
                 }
             },
@@ -417,7 +390,6 @@
 
 <style>
 
-	/* Color Panel */
 	input[type="radio"] {
 		display: none;
 	}
@@ -528,8 +500,6 @@
 
 <style>
 
-	/* Image Preview & Crop */
-
     .crop-result {
 		border: 1px solid black;
 		width: 300px;
@@ -540,16 +510,5 @@
     .cropped-image {
         width:100%;
     }
-
-    /* .cropper-container {
-        min-width: 100% !important;
-        min-height: 100% !important;
-        background: #ccc;
-    } */
-
-    /* .cropper-crop-box {
-        width: 200px !important;
-        height: 200px !important;
-    } */
 	
 </style>

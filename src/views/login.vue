@@ -86,9 +86,6 @@
                 invalid_password: false,
             }
         },
-        mounted(){
-        // this.create();
-        },
         methods : {
             async doLogin() {
                 this.validating();
@@ -111,8 +108,6 @@
                         }
                     ))
                     .then(response => {
-                        console.log(response)
-                    
                     if(!response.token) {
                         alert("Your username or password is incorrect! Please try again")
                     } else {
@@ -134,22 +129,6 @@
                 this.invalid_password = false;
             }, 3000);
             },
-            // async getuser() {
-            // try {
-            //     const res = await fetch('https://dorasitkmutt.ddns.net/api/showuser' , {
-            //         // method: "GET" ,
-            //         headers: {"Authorization": "Bearer " + this.token} 
-            //         });
-            //     const data = res.json();
-            //     return data;
-            // }catch(e){
-            //     console.log (e)
-            // }
-            // },
-            // async create() {
-            //     this.user = await this.getuser();
-            //     console.log(this.user);
-            // }
         }
 	}
     

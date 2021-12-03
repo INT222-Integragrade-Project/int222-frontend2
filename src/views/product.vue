@@ -157,11 +157,7 @@ export default {
             resRole: '',
             users: [],
             user: Object,
-            // favIdForDel: 0,
-            // myFav: [],
             FavProducts: [],
-            // favIdForDel: 0,
-            // productcolorlist: [],
             selectedBrand: 'All Brand',
             selectedSort: '',
             filterBrand: 0,
@@ -246,8 +242,6 @@ export default {
                 }
             }
             localStorage.setItem("username" , this.user.userName)
-            // console.log(this.userfav)
-            // console.log(this.users);
             for(let i = 0; i < this.userfav.length; i++) {
                 for(let j = 0 ; j < this.products.length ; j++) {
                     if(this.userfav[i].prouctId == this.products[j].productId) {
@@ -255,10 +249,7 @@ export default {
                     }
                 }
             }
-
             this.ogproducts = this.products;
-            
-            
         },
         async getUsers() {
             try {

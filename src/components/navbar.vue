@@ -242,12 +242,9 @@
             }
         },
         mounted() {
-            // ถ้ามีการ Login เข้ามา
             if (localStorage.token) {
                 this.username = localStorage.username;
                 this.role = localStorage.resRole;
-                console.log(this.username)
-                console.log(this.role)
                 if(this.displayNone){
                     this.displayNone = false;
                 } else {
@@ -276,11 +273,9 @@
                 }
             },
             toggleSidebar: function(){
-                // Sidebar
                 this.isShowSidebar = !this.isShowSidebar
             },
             toggleSearch: function(){
-                // Search bar on Mobile
                 if(this.isShowSearch){
                     this.isShowSearch = false;
                 } else {

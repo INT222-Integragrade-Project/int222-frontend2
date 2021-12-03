@@ -2,11 +2,6 @@
   <div class="myproductdetail">
     <navbar></navbar>
 
-    <!-- <div style="width:200px;height:200px;">
-			<img id="zoom_01" style="width:100%;" src='../assets/image/product/Anello/PA1/PA1Green.png' data-zoom-image="src='../assets/image/product/Anello/PA1/PA1Green.png'"/>
-		</div>	 -->
-
-    <!-- <ProductZoomer :base-images="images" :base-zoomer-options="zoomerOptions" /> -->
     <div class="container" style="max-width: 1200px">
       <div class="row">
         <div class="col-md" style="text-align: center">
@@ -30,18 +25,15 @@
 
               <div class="col-md-8">
                 <div class="product-frame">
-                  <!-- <img :src="imageLocation" style="width:100%"> -->
                   <vue-magnifier :src="imageLocation" :src-large="imageLocation"/>
                 </div>
               </div>
 
               <div class="col-md-2 row-horizontal">
                 <div class="image-item-horizontal">
-                  <!-- <div class="row justify-content-center"> -->
                   <div class="image-item" v-for="product in currentproduct" :key="product.productColorId">
                     <img style="width: 100%" :src="`https://dorasitkmutt.ddns.net/api/file/${product.imageName}`" :ref="product.imageName" @click="selectImage(product)"/>
                   </div>
-                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -53,7 +45,7 @@
               <div class="detail-productid">ID : {{ product.productId }}</div>
 
               <div class="detail-price">{{ product.price }} THB</div>
-              <div class="detail-amount">Amount 1000 pc.</div>
+              <div class="detail-amount">Amount {{stock}} pc.</div>
 
               <div class="detail-description">
                 <div class="title">Detail</div>
@@ -86,7 +78,6 @@
               </div>
 
               <div class="detail-submit">
-                <!-- <router-link to="/editproduct" class="btn btn-primary" -->
                 <router-link :to="{name:'editproduct' , params:{id:this.id}}" class="btn btn-primary"
                   >Edit</router-link>
                 <button class="btn btn-danger" @click="confirmDelete(pd)">
@@ -216,103 +207,7 @@ export default {
           bgColor: "#EDD9BB",
         },
       ],
-      // productItem: [ // mock up
-      //   {
-      //     refname: "imgItem1",
-      //     name: "PA1Green.png",
-      //     item_src: require("../assets/image/product/Anello/PA1/PA1Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem2",
-      //     name: "PA2Blue.png",
-      //     item_src: require("../assets/image/product/Anello/PA2/PA2Blue.png"),
-      //   },
-      //   {
-      //     refname: "imgItem3",
-      //     name: "PA3Black.png",
-      //     item_src: require("../assets/image/product/Anello/PA3/PA3Black.png"),
-      //   },
-      //   {
-      //     refname: "imgItem4",
-      //     name: "PD1Red.png",
-      //     item_src: require("../assets/image/product/Dior/PD1/PD1Red.png"),
-      //   },
-      //   {
-      //     refname: "imgItem5",
-      //     name: "PD2White.png",
-      //     item_src: require("../assets/image/product/Dior/PD2/PD2White.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      //   {
-      //     refname: "imgItem6",
-      //     name: "PD4Green.png",
-      //     item_src: require("../assets/image/product/Dior/PD4/PD4Green.png"),
-      //   },
-      // ],
+      
       productColorSwatch: [],
       spoilerShow: true,
       spoilerHide: false,
@@ -322,6 +217,7 @@ export default {
       currentproduct: [],
       currentcolor: [],
       imageLocation: '',
+      stock: 0,
     };
   },
   mounted() {
@@ -359,11 +255,13 @@ export default {
       for(let i of this.currentproduct) {
         if(colorId == i.colorId) {
           this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${i.imageName}`
+          this.stock = i.stock
         }
       }
     },
     selectImage(refname) {
       this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${refname.imageName}`
+      this.stock = refname.stock
     },
     async create() {
       this.product = await this.getproduct();
@@ -392,21 +290,13 @@ export default {
           }
         }
       }
-      console.log(this.productColorSwatch)
 
       this.imageLocation = `https://dorasitkmutt.ddns.net/api/file/${this.currentproduct[0].imageName}`
-      // console.log(this.product);
-      // console.log(this.color);
-      // console.log(this.productcolorlist);
-      // console.log(this.currentproduct);
-      // console.log(this.colorSwatch);
-      // console.log(this.currentcolor);
+      this.stock = this.currentproduct[0].stock
     },
         confirmDelete(obj){
             if (confirm("Do you want to delete this product?")) {
-                console.log(obj.productId)
-                // this.productlist.splice(this.productlist.indexOf(obj), 1);
-                // return true;
+
                 console.log(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}`)
                 fetch(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}` , {
                 method:'DELETE'

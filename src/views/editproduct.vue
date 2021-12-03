@@ -65,10 +65,8 @@
                         </div>
                     </div>
 
-                    <!-- ส่วนของฟอร์ม สี + รูป + Stock //เพิ่มได้โดยการกด Add -->
                     <div class="formColorContent" v-for="(formColor, counter) in formColor" v-bind:key="counter" >
                         <div v-if="formColor.isDisplay">
-                            <!-- <label><b>[ Order: {{formColor.index}} ]</b></label> -->
 
                             <div class="cancel-form-color" @click="cancelFormColor(formColor)" v-if="formColor.enableCancel">
                                 <button type="button" class="btn btn-outline-dark"><span class="material-icons-outlined">close</span></button>
@@ -86,7 +84,6 @@
 
                             <div class="row row-image-upload">
                                 <div class="form-group col-lg-12">
-                                    <!-- <input type="file" @change="onFileChange"> -->
                                     <cropperjs v-if="visibleComponent==='cropperjs'"></cropperjs>
                                 </div>
                             </div>
@@ -157,7 +154,7 @@
                 invalid_description: false,
                 image: "",
                 img_style: "width:100%;",
-                indexFormColor: 3, // index ของฟอร์มสินค้า // ถ้าข้อมูลมีหลายสี index จะเป็น จำนวนสินค้า id นี้
+                indexFormColor: 3,
                 colorSwatch: [],
                 formColor:[],
                 productcolors: [],
@@ -171,7 +168,6 @@
         },
         mounted() {
             this.create();
-            // loop for รายการสีที่มี
             this.createColorSwatch(1)
 
 
@@ -229,10 +225,6 @@
             this.editsize = this.product.size;
             this.editbrand = this.product.brandId;
             this.editdescription = this.product.description;
-
-            // for() {
-
-            // }
         },
         createColorSwatch(index) {
                 this.colorSwatch[index] = [
@@ -363,10 +355,8 @@
                     const frmColor = this.formColor.filter((tmp)=>{
                         return tmp.index === obj.index;
                     }).pop();
-                    console.log(frmColor)
                     frmColor.visibleComponent = ""
                     frmColor.isDisplay = false
-                    // this.formColor.splice(this.formColor.indexOf(frmColor), 1);
                 }
             },
         doEditProduct(){

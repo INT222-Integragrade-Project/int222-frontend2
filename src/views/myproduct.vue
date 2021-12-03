@@ -106,8 +106,6 @@ export default {
     data() {
         return {
             token: '',
-            displayNone: false,
-            displayShow: true,
 
             productlist: [],
             ogProductlist: [],

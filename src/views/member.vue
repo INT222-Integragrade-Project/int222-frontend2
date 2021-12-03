@@ -198,20 +198,15 @@
                 let changeRole2 = 0;
                 for(let i of this.promoterole) {
                     if(i.name == user.role) {
-                        console.log(i.name)
-                        console.log(user.role) 
                         changeRole2 = i.id;
                     }
                 }
-                console.log(user.userId);
-                console.log(changeRole2);
                 fetch( `https://dorasitkmutt.ddns.net/api/PromoteRole?idUser=${user.userId}&Role=${changeRole2}` , {
                 method: "PUT",
                 headers: { "Authorization" : `Bearer ${this.token}`}
                 })
                 alert('You have changed role');
                 location.reload()
-                console.log("Promote Role!")
             },
             deleteAccount(user) {
                 if(user.role == 'superadmin') {
@@ -224,7 +219,6 @@
                 })
                     alert('You have deleted account');
                     location.reload()
-                    console.log("Delete Account!")
                     }
                 }
             },

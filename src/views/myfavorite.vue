@@ -73,11 +73,6 @@
                             </div>
                         </router-link>
                         <div class="div-product-favorite">
-                            <!-- for unliked -->
-                            <!-- <button type="button" class="btn link-custom" style="cursor:pointer;" v-if="!pd.is_like" v-on:click="pd.is_like = !pd.is_like">
-                                <span class="material-icons-outlined">favorite_border</span>
-                            </button> -->
-
                             <!-- for liked -->
                             <button type="button" class="btn link-custom" style="cursor:pointer;" @click="delFav(pd)">
                                 <span class="material-icons-outlined">favorite</span>
@@ -111,10 +106,6 @@ export default {
     },
     data() {
         return {
-            // displayNone: false,
-            // displayShow: true,
-            // isNotLiked: true,
-            // isLiked: false,
             token: '',
             resId: 0,
             myFav: [
@@ -143,7 +134,6 @@ export default {
             for(let i = 0 ; i < this.myFav.length ; i++) {
                 if(obj.productId === this.myFav[i].productId) {
                     this.favIdForDel = this.myFav[i].favoriteId;
-                    console.log(this.favIdForDel)
                     break;
                 }
             }
@@ -152,7 +142,6 @@ export default {
                 headers: { "Authorization" : `Bearer ${this.token}`}
                 })
                 .then(() => location.reload())
-                console.log(obj.productId);
             }
         },
         async getFav() {
@@ -207,11 +196,8 @@ export default {
                         this.myFavProducts[i] = this.products[j]
                     }
                 }
-                // console.log(this.myFavProducts[i])
             }
             this.ogFav = this.myFavProducts
-            console.log(this.myFavProducts)
-            // console.log(this.myFav);
         },
         selectBrand(brand) {
             this.myFavProducts = this.ogFav;
