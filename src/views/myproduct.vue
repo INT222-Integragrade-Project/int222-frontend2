@@ -1,11 +1,17 @@
 <template>
     <div class="myproduct">
-     <navbar></navbar>   
+     <navbar @search="searchproduct"></navbar>   
         <div class="container" style="max-width: 1200px;">
             
             <div class="row">
                 <div class="col-md" style="text-align: left;">
                     <p class="topic">My Product</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md" style="text-align: center;">
+                    <span style="float:left;">{{selectedBrand}}  |  {{selectedSort}}</span>
                 </div>
             </div>
             
@@ -17,13 +23,8 @@
                         <div class="btn-group" style="float:left;">
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownBrand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">BRAND</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownBrand">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Anello</a>
-                                <a class="dropdown-item">Chanel</a>
-                                <a class="dropdown-item">Dior</a>
-                                <a class="dropdown-item">Guicci</a>
-                                <a class="dropdown-item">Lyn</a>
-                                <a class="dropdown-item">Ysl</a>
+                                <a class="dropdown-item" @click="selectNone">None</a>
+                                <a class="dropdown-item" v-for="(brand, index) in brands" :key="index" @click="selectBrand(brand)">{{brand.brandName}}</a>
                             </div>
                         </div>
 
@@ -31,20 +32,7 @@
                             <label class="btn dropdown-toggle" href="#" role="button" id="dropdownColor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">COLOR</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownColor">
                                 <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Blue</a>
-                                <a class="dropdown-item">Green</a>
-                                <a class="dropdown-item">Red</a>
-                                <a class="dropdown-item">Brown</a>
-                                <a class="dropdown-item">Black</a>
-                                <a class="dropdown-item">White</a>
-                                <a class="dropdown-item">Yellow</a>
-                                <a class="dropdown-item">Orange</a>
-                                <a class="dropdown-item">Sky Blue</a>
-                                <a class="dropdown-item">Gray</a>
-                                <a class="dropdown-item">Pink</a>
-                                <a class="dropdown-item">Cream</a>
-                                <a class="dropdown-item">Beige</a>
-                                <a class="dropdown-item">Purple</a>
+                                <a class="dropdown-item" v-for="(color, index) in colors" :key="index">{{color.colorName}}</a>
                             </div>
                         </div>
 
@@ -52,9 +40,9 @@
                         <div class="btn-group" style="float: right;">
                         <label class="btn dropdown-toggle" href="#" role="button" id="dropdownSortby" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 15px;">SORT BY PRICE</label>
                             <div class="dropdown-menu" aria-labelledby="dropdownSortby">
-                                <a class="dropdown-item">None</a>
-                                <a class="dropdown-item">Low to high</a>
-                                <a class="dropdown-item">High to low</a>
+                                <a class="dropdown-item" @click="sortNone">None</a>
+                                <a class="dropdown-item" @click="sortL2H">Low to high</a>
+                                <a class="dropdown-item" @click="sortH2L">High to low</a>
                             </div>
                         </div>
 
@@ -66,14 +54,14 @@
 
             <div class="product-content">
 
-                <div class="row justify-content-sm-center" style="margin:0px;">
+                <div class="row justify-content-sm-fit" style="margin:0px;">
 
                     <!-- Loop For Product -->
                     <div class="product-item" v-for="(pd, index) in productlist" :key="index">
                         <router-link :to="{name:'myproductdetail' , params:{id:pd.productId}}">
                             <div class="div-product">
                                 <div class="div-product-img">
-                                    <img :src="`https://www.dora.company/api/getfirstpic/${pd.productId}`">
+                                    <img :src="`https://dorasitkmutt.ddns.net/api/getfirstpic/${pd.productId}`">
                                 </div>
                                 
                                 <div class="div-product-title">
@@ -117,43 +105,15 @@ export default {
     },
     data() {
         return {
-            displayNone: false,
-            displayShow: true,
+            token: '',
 
             productlist: [],
-
-            productData: [
-                {
-                    product_id: "100001",
-                    product_name: "ANELLO shoulder bag ALTON SIZE REG",
-                    product_location: require('../assets/image/product/Anello/PA1/PA1Pink.png'),
-                    product_price: 3500,
-                },
-                {
-                    product_id: "100002",
-                    product_name: "ANELLO tote bag TORESA SIZE REG",
-                    product_location: require('../assets/image/product/Anello/PA2/PA2Blue.png'),
-                    product_price: 2000,
-                },
-                {
-                    product_id: "100003",
-                    product_name: "ANELLO backpack CROSS BOTTLE (R) SIZE SMALL",
-                    product_location: require('../assets/image/product/Anello/PA3/PA3Black.png'),
-                    product_price: 1800,
-                },
-                {
-                    product_id: "100004",
-                    product_name: "ANELLO backpack SUBSIST SIZE REG",
-                    product_location: require('../assets/image/product/Anello/PA4/PA4Red.png'),
-                    product_price: 3200,
-                },
-                {
-                    product_id: "100005",
-                    product_name: "ANELLO backpack PASUTERU 2ND SIZE REG",
-                    product_location: require('../assets/image/product/Anello/PA5/PA5Black.png'),
-                    product_price: 2400,
-                },
-            ],
+            ogProductlist: [],
+            brands: [],
+            colors:[],
+            selectedBrand: 'All Brand',
+            selectedSort: 'unsorted',
+            filterBrand: 0,
         }
     },
     mounted(){
@@ -162,32 +122,88 @@ export default {
     methods: {
         async getproducts() {
             try {
-                const res = await fetch('https://www.dora.company/api/show');
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/show');
                 const data = res.json();
                 return data;
             }catch(e){
                 console.log (e)
             }
         },
-
+        async getcolors() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showallcolor');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
+        async getbrands() {
+            try {
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showbrand');
+                const data = res.json();
+                return data;
+            }catch(e){
+                console.log (e)
+            }
+        },
         async create(){
             this.productlist = await this.getproducts();
+            this.colors = await this.getcolors();
+            this.brands = await this.getbrands();
+            this.ogProductlist = this.productlist
+            this.token = localStorage.token
         },
-
         confirmDelete(obj){
             if (confirm("Do you want to delete this product?")) {
                 console.log(obj.productId)
-                // this.productlist.splice(this.productlist.indexOf(obj), 1);
-                // return true;
-                console.log(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}`)
-                fetch(`https://www.dora.company/api/deleteproductid?deleteproductid=${obj.productId}` , {
-                method:'DELETE'
+                fetch(`https://dorasitkmutt.ddns.net/api/deleteproductid?deleteproductid=${obj.productId}` , {
+                method:'DELETE' ,
+                headers: { "Authorization" : `Bearer ${this.token}`}
                 })
-                // fetch("http://104.215.139.17:3000/deletefile?imagesdelete=" +  this.product.images , {
-                // method:'DELETE'
-                // })
+                fetch(`https://dorasitkmutt.ddns.net/api/deletefile?deleteimages=${obj.productId}` , {
+                method:'DELETE' ,
+                headers: { "Authorization" : `Bearer ${this.token}`}
+                })
+                alert('You have deleted a product!')
+                location.reload()
             }
+        },
+        selectBrand(brand) {
+            this.productlist = this.ogProductlist;
+            this.filterBrand = brand.brandId
+            this.selectedBrand = brand.brandName
+            this.productlist = this.productlist.filter(this.checkBrand)
+        },
+        selectNone() {
+            this.productlist = this.ogProductlist;
+            this.selectedBrand = 'All Brand'
+        },
+        checkBrand(product) {
+            return product.brandId == this.filterBrand;
+        },
+        sortNone() {
+            this.selectedSort = ''
+            this.productlist.sort(function(a, b){return a.productId-b.productId})
+        },
+        sortL2H() {
+            this.selectedSort = 'Price : Low to high'
+            this.productlist.sort(function(a, b){return a.price-b.price})
+        },
+        sortH2L() {
+            this.selectedSort = 'Price : High to low'
+            this.productlist.sort(function(a, b){return b.price-a.price}) 
+        },
+        searchproduct(search) {
+            if(search == '') {
+                return this.productlist = this.ogProductlist
+            }
+            this.productlist = this.productlist.filter(list => {
+                list = list.productName.toLowerCase()
+                return list.indexOf(search.toLowerCase()) > -1
+            })
         }
     }
+    
 }
 </script>
