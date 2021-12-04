@@ -161,7 +161,6 @@ export default {
             selectedBrand: 'All Brand',
             selectedSort: '',
             filterBrand: 0,
-            role: Navbar.role,
         }
     },
     mounted(){

@@ -147,11 +147,11 @@
                 editbrand: "",
                 editdescription: "",
                 editpath: "",
-                // color and image
+
                 inputcolor: [],
                 inputimage: [],
                 inputstock: [],
-                 //validate
+
                 invalid_productname: false,
                 invalid_price: false,
                 invalid_manufacture: false,
@@ -159,16 +159,10 @@
                 invalid_size: false,
                 invalid_brand: false,
                 invalid_description: false,
-                // image: "",
                 img_style: "width:100%;",
                 indexFormColor: 1,
                 colorSwatch: [],
                 formColor:[],
-                // productcolors: [],
-                // colors: [],
-                // product_image: [],
-                // product_stock: [],
-                // product_color: [],
 
                 visibleComponent: "cropperjs",
             }

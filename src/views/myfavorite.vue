@@ -1,6 +1,6 @@
 <template>
     <div class="myfavorite">
-     <navbar></navbar>   
+     <navbar @search="searchproduct"></navbar>   
         <div class="container" style="max-width: 1200px;">
             
             <div class="row">
@@ -222,6 +222,15 @@ export default {
             this.selectedSort = 'Price : High to low'
             this.myFavProducts.sort(function(a, b){return b.price-a.price})  
         },
+        searchproduct(search) {
+            if(search == '') {
+                return this.myFavProducts = this.ogFav
+            }
+            this.myFavProducts = this.myFavProducts.filter(list => {
+                list = list.productName.toLowerCase()
+                return list.indexOf(search.toLowerCase()) > -1
+            })
+        }
     },
     mounted() {
         this.create()
