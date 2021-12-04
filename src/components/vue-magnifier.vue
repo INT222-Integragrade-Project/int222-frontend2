@@ -5,8 +5,7 @@
       <span
         ref="magnificationElement"
         class="preview"
-        v-bind:style="{ backgroundImage: 'url(' + src + ')', width:'100%' }"
-      >
+        v-bind:style="{ backgroundImage: 'url(' + src + ')', width:'100%' }">
         <span ref="glass" class="magnifying-glass" v-bind:style="glassStyle" />
       </span>
     </div>

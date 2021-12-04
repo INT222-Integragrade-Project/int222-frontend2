@@ -8,7 +8,6 @@
                     <p class="topic">DORA PRODUCT</p>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md" style="text-align: center;">
                     <div id="carouselIndicators" class="carousel slide" data-ride="carousel">

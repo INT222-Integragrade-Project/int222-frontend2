@@ -216,9 +216,6 @@
 
                         <button type="button" class="btn btn-close-custom btn-light close-search" @click="toggleSearch"><i class="bi bi-x" style="font-size: 20px;"></i></button>
                     </div>
-                        
-
-                <!-- </form> -->
 
             </div>
         </div>

@@ -1,12 +1,6 @@
 <template>
   <div class="productdetail">
     <navbar></navbar>
-
-    <!-- <div style="width:200px;height:200px;">
-			<img id="zoom_01" style="width:100%;" src='../assets/image/product/Anello/PA1/PA1Green.png' data-zoom-image="src='../assets/image/product/Anello/PA1/PA1Green.png'"/>
-		</div>	 -->
-
-    <!-- <ProductZoomer :base-images="images" :base-zoomer-options="zoomerOptions" /> -->
     <div class="container" style="max-width: 1200px">
       <div class="row">
         <div class="col-md" style="text-align: center">
@@ -30,18 +24,15 @@
 
               <div class="col-md-8">
                 <div class="product-frame">
-                  <!-- <img :src="imageLocation" style="width:100%"> -->
                   <vue-magnifier :src="imageLocation" :src-large="imageLocation"/>
                 </div>
               </div>
 
               <div class="col-md-2 row-horizontal">
                 <div class="image-item-horizontal">
-                  <!-- <div class="row justify-content-center"> -->
                   <div class="image-item" v-for="product in currentproduct" :key="product.productColorId">
                     <img style="width: 100%" :src="`https://dorasitkmutt.ddns.net/api/file/${product.imageName}`" :ref="product.imageName" @click="selectImage(product)"/>
                   </div>
-                  <!-- </div> -->
                 </div>
               </div>
             </div>

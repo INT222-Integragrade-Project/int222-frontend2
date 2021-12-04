@@ -22,7 +22,6 @@
         </div>
         <input type="button" role="button" class="btn btn-primary" style="margin:20px auto;" value="Crop" v-if="imgSrc != ''" @click="cropImage"/>
     </div>
-
     <div class="crop-result" v-if="show">
         <img class="cropped-image" v-if="cropImg" :src="cropImg" alt="Cropped Image">
     </div>
