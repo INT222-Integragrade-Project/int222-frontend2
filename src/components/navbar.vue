@@ -16,6 +16,7 @@
 
         <!-- right -->
         <!-- สำหรับ user ที่มีการ login แล้ว -->
+        <div v-if="isAdmin">
             <li class="nav-menu-item-right-link margin-right-menu" v-if="displayNone">
                 <div class="menu-button" @click="toggleSidebar">
                     <a class="menu-link" style="cursor: pointer;">
@@ -23,8 +24,10 @@
                     </a>
                 </div>
             </li>
+        </div>
 
         <!-- ถ้าเป็น user ทั่วไป -->
+        <div v-if="isshowfav">
         <li class="nav-menu-item-right-link margin-right-menu" v-if="displayShow">
             <router-link to="/myfavorite" class="menu-link">
                 <span class="material-icons">favorite_border</span>
@@ -36,6 +39,7 @@
                 <span class="material-icons">favorite_border</span>
             </router-link>
         </li>
+        </div>
         
 
         <!-- ถ้ามีการ Login แล้ว -->
@@ -45,7 +49,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-custom">
                     <label class="login-label-username">
-                        {{sessUsername}}
+                        {{username}}
                     </label>
                     <router-link to="/profile" class="dropdown-item nav-dropdown-item">Profile</router-link>
                     <button type="button" @click="doLogout" class="dropdown-item nav-dropdown-item">
@@ -72,16 +76,16 @@
         </li>
 
         <li class="nav-menu-item-right">
-            <form action="#search" method="get">
+            <!-- <form method="get"> -->
                 <div class="input-group">
-                    <input type="text" class="form-control form-search-custom" id="txtSearch" name="txtSearch" value="">
+                    <input v-model="search" @keyup="$emit('search',search)" type="text" class="form-control form-search-custom" id="txtSearch">
                     <span class="input-group-append">
                         <button class="btn btn-outline-secondary btn-outline-secondary-custom border-left-0">
                             <i class="bi bi-search"></i>
                         </button>
                     </span>
                 </div>
-            </form>
+            <!-- </form> -->
         </li>
 
     </ul>
@@ -101,6 +105,7 @@
 
         <!-- Right -->
         <!-- สำหรับ user ที่มีการ login แล้ว -->
+        <div v-if="isAdmin">
             <li class="nav-menu-mobile-right-img margin-right-menu" v-if="displayNone">
                 <div class="menu-button-500" @click="toggleSidebar">
                     <a class="menu-link" style="cursor: pointer;">
@@ -108,8 +113,10 @@
                     </a>
                 </div>
             </li>
+        </div>
         
         <!-- ถ้าเป็น user ทั่วไป -->
+        <div v-if="isshowfav">
         <li class="nav-menu-mobile-right-img margin-right-menu" v-if="displayShow">
             <router-link to="/myfavorite" class="menu-link">
                 <span class="material-icons">favorite_border</span>
@@ -121,6 +128,7 @@
                 <span class="material-icons">favorite_border</span>
             </router-link>
         </li>
+        </div>
 
         <!-- ถ้ามีการ Login แล้ว -->
             <li class="nav-menu-mobile-right-img" v-if="displayNone">
@@ -129,7 +137,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-custom">
                     <label class="login-label-username">
-                        {{sessUsername}}
+                        {{username}}
                     </label>
                     <router-link to="/profile" class="dropdown-item nav-dropdown-item">Profile</router-link>
                     <button type="button" @click="doLogout" class="dropdown-item nav-dropdown-item">
@@ -156,6 +164,7 @@
     </ul>
 
     <!-- Side bar Menu -->
+    <div v-if="isAdmin">
     <transition name="slide-fade" mode="in-out">
         <div class="sidebar-menu" v-show="isShowSidebar">
             <div class="row">
@@ -178,7 +187,7 @@
                 </div>
             </router-link>
 
-            <router-link to="/member">
+            <router-link to="/member" v-if="isSuperAdmin">
                 <div class="sidebar-icon">
                     <span class="material-icons">people_alt</span>
                     Members
@@ -187,13 +196,14 @@
         
         </div>
     </transition>
+    </div>
 
     <!-- Search Panel -->
     <div class="search-panel" :class="{show: isShowSearch}">
         <div class="row">
             <div class="col-md" style="text-align: center;">
 
-                <form action="#search" method="get">
+                <!-- <form action="search" method="get"> -->
                     <div class="input-group-search">
 
                         <div class="prefix-search-input">
@@ -202,13 +212,10 @@
                             </button>
                         </div>
 
-                        <input type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" name="txtSearch" placeholder="search" value="" autocomplete="off">
+                        <input v-model="search" @keypress.enter="$emit('search',search) ; toggleSearch()" type="text" class="form-control form-search-panel-custom" id="txtSearchPanel" placeholder="search" autocomplete="off" >
 
                         <button type="button" class="btn btn-close-custom btn-light close-search" @click="toggleSearch"><i class="bi bi-x" style="font-size: 20px;"></i></button>
                     </div>
-                        
-
-                </form>
 
             </div>
         </div>
@@ -220,23 +227,39 @@
     
     export default {
         name : "navbar",
+        emits: ['search'],
         data() {
             return {
                 displayNone: false,
                 displayShow: true,
                 isShowSidebar: false,
                 isShowSearch: false,
-                sessUsername: '',
-                sessRole: '',
+                username: '',
+                role: '',
+                users: [],
+                user: '',
+                resId: '',
+                isAdmin: false,
+                isSuperAdmin: false,
+                isshowfav: false,
+                search: '',
             }
         },
+        computed: {
+            searching() {
+                this.$emit("search",this.search)
+                console.log(this.search)
+            //     return this.image.filter((member) => {
+            //         return member.title.toLowerCase().includes(this.form.text.toLowerCase());
+            // });
+            return '';
+        },
+        },
         mounted() {
-            // ถ้ามีการ Login เข้ามา
-            if (localStorage.sessUsername) {
-                this.sessUsername = localStorage.sessUsername;
-                this.sessRole = localStorage.sessRole;
-                console.log(this.sessUsername);
-                console.log(this.sessRole);
+            if (localStorage.token) {
+                this.username = localStorage.username;
+                this.role = localStorage.resRole;
+                this.isshowfav = true
                 if(this.displayNone){
                     this.displayNone = false;
                 } else {
@@ -249,6 +272,12 @@
                     this.displayShow = true;
                 }
             }
+            if(this.role == "superadmin") {
+                this.isSuperAdmin = true;
+            }
+            if(this.role == "admin" || this.role == "superadmin") {
+                this.isAdmin = true;
+            }
         },
         methods : {
             doLogout: function() {
@@ -259,11 +288,9 @@
                 }
             },
             toggleSidebar: function(){
-                // Sidebar
                 this.isShowSidebar = !this.isShowSidebar
             },
             toggleSearch: function(){
-                // Search bar on Mobile
                 if(this.isShowSearch){
                     this.isShowSearch = false;
                 } else {
@@ -272,7 +299,6 @@
             },
         }
     }
-
 </script>
 
 <style>

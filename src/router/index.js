@@ -65,7 +65,7 @@ const routes = [
     component: addproduct
   },
   {
-    path: '/editproduct/:idforedit',
+    path: '/editproduct/:id',
     name: 'editproduct',
     props: true ,
     component: editproduct
@@ -83,7 +83,6 @@ const routes = [
   },
   
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes

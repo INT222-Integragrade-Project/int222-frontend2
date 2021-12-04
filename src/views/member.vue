@@ -33,7 +33,7 @@
                             <span class="material-icons-outlined" style="position:relative;top:7px;">
                                 arrow_drop_down
                             </span>
-                            Owners (99)
+                            Owners ({{superadmins.length + admins.length}})
                         </a>
                     
                         <div id="collapseOwners" class="collapse show">
@@ -46,18 +46,19 @@
                                     <th style="width:25%;">Action</th>
                                 </tr>
 
-                                <tr>
-                                    <td>1</td>
-                                    <td>OLARN</td>
+                                <tr v-for="(superadmin,index) in superadmins" :key="index">
+                                    <td>{{index+1}}</td>
+                                    <td>{{superadmin.name}}</td>
                                     <td style="text-align: center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin" selected>Super Admin</option>
+                                        <select class="form-control form-admin-role" name="txtAdminRole">
+                                             <option>Super Admin</option>
+                                            <!-- <option value="superadmin">Super Admin</option>
                                             <option value="admin">Admin</option>
-                                            <option value="customer">Customer</option>
+                                            <option value="customer">Customer</option> -->
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
+                                        <button class="btn btn-sm btn-danger" @click="deleteAccount(superadmin)">
                                             <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
                                                 delete_outline
                                             </span>
@@ -66,18 +67,16 @@
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>2</td>
-                                    <td>Umaporn</td>
+                                <tr v-for="(admin,index) in admins" :key="index">
+                                    <td>{{index+1+superadmins.length}}</td>
+                                    <td>{{admin.name}}</td>
                                     <td style="text-align: center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin">Super Admin</option>
-                                            <option value="admin" selected>Admin</option>
-                                            <option value="customer">Customer</option>
+                                        <select v-model="admin.role" class="form-control form-admin-role" name="txtAdminRole" @change="changeRole(admin)"> 
+                                            <option :value="role.name" v-for="role in promoterole" :key="role.id">{{role.name}}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
+                                        <button class="btn btn-sm btn-danger"  @click="deleteAccount(admin)">
                                             <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
                                                 delete_outline
                                             </span>
@@ -86,25 +85,6 @@
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>3</td>
-                                    <td>Noppadon</td>
-                                    <td style="text-align: center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin">Super Admin</option>
-                                            <option value="admin" selected>Admin</option>
-                                            <option value="customer">Customer</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
-                                            <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
-                                                delete_outline
-                                            </span>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
                             </table>
 
                         </div>
@@ -116,7 +96,7 @@
                             <span class="material-icons-outlined" style="position:relative;top:7px;">
                                 arrow_drop_down
                             </span>
-                            Members and Guests (9)
+                            Members and Guests ({{customers.length}})
                         </a>
                     
                         <div id="collapseMember" class="collapse">
@@ -129,58 +109,16 @@
                                     <th style="width:25%;">Action</th>
                                 </tr>
 
-                                <tr>
-                                    <td>1</td>
-                                    <td>Member01</td>
+                                <tr v-for="(customer,index) in customers" :key="index">
+                                    <td>{{index+1}}</td>
+                                    <td>{{customer.name}}</td>
                                     <td style="text-align:center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin">Super Admin</option>
-                                            <option value="admin" selected>Admin</option>
-                                            <option value="customer">Customer</option>
+                                        <select v-model="customer.role" class="form-control form-admin-role" name="txtAdminRole" @change="changeRole(customer)">
+                                            <option :value="role.name" v-for="role in promoterole" :key="role.id">{{role.name}}</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
-                                            <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
-                                                delete_outline
-                                            </span>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>2</td>
-                                    <td>Member02</td>
-                                    <td style="text-align:center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin">Super Admin</option>
-                                            <option value="admin" selected>Admin</option>
-                                            <option value="customer">Customer</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
-                                            <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
-                                                delete_outline
-                                            </span>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>3</td>
-                                    <td>Member03</td>
-                                    <td style="text-align:center;">
-                                        <select class="form-control form-admin-role" name="txtAdminRole" @change="confirmChange"> 
-                                            <option value="superadmin">Super Admin</option>
-                                            <option value="admin" selected>Admin</option>
-                                            <option value="customer">Customer</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger" @click="confirmDelete">
+                                        <button class="btn btn-sm btn-danger" @click="deleteAccount(customer)">
                                             <span class="material-icons-outlined" style="position:relative;top:7px;line-height: 0px;">
                                                 delete_outline
                                             </span>
@@ -198,7 +136,6 @@
 
         </div>
     </div>
-
 </template>
 
 <script>
@@ -207,54 +144,85 @@
     export default {
         name : "member",
         components : {Navbar},
-        props: {
-            idforedit: {
-                type: String,
-                required: true,
-            },
-        },
         data() {
             return {
-                user: [],
-                // username: '',
-                // password: '',
-                // username_mb: '',
-                // password_mb: '',
-                // test_user: 'admin',
-                // test_password: 'admin',
+                token: '',
+                users: [],
+                superadmins: [],
+                admins: [],
+                customers: [],
+                promoterole: [{
+                    id: 0,
+                    name: 'customer'
+                    },
+                    {
+                    id:1,
+                    name: 'admin'
+                    },
+                ],
             }
         },
         mounted(){
         this.create();
-        console.log(this.idforedit)
         },
         methods : {
             async create() {
-                this.user = await this.getuser();
-                console.log(this.user);
+                this.token = localStorage.token
+                this.users = await this.getusers();
+                for(let i = 0 ; i < this.users.length ; i++) {
+                    if(this.users[i].role == "superadmin") {
+                        this.superadmins.push(this.users[i])
+                    }
+                    if(this.users[i].role == "admin") {
+                        this.admins.push(this.users[i])
+                    }
+                    if(this.users[i].role == "customer") {
+                        this.customers.push(this.users[i])
+                    }
+                }
             },
-            async getuser() {
+            async getusers() {
             try {
-                const res = await fetch('http://13.76.46.188:3000/showuser');
+                const res = await fetch('https://dorasitkmutt.ddns.net/api/showalluser' , {
+                    method: "GET",
+                    headers: { "Authorization" : `Bearer ${this.token}`}
+                });
                 const data = res.json();
                 return data;
             }catch(e){
                 console.log (e)
             }
             },
-            confirmChange: function(){
-                if(confirm("ต้องการเปลี่ยน Role หรือไม่")){
-                    alert("เปลี่ยนแล้วจ้าา");
+            changeRole(user) {
+                let changeRole2 = 0;
+                for(let i of this.promoterole) {
+                    if(i.name == user.role) {
+                        changeRole2 = i.id;
+                    }
                 }
+                fetch( `https://dorasitkmutt.ddns.net/api/PromoteRole?idUser=${user.userId}&Role=${changeRole2}` , {
+                method: "PUT",
+                headers: { "Authorization" : `Bearer ${this.token}`}
+                })
+                alert('You have changed role');
+                location.reload()
             },
-            confirmDelete: function(){
-                if(confirm("ต้องการลบบัญชีนี้จริงๆหรือเนี่ยยย ?")){
-                    alert("ลบเลยจ้าา");
+            deleteAccount(user) {
+                if(user.role == 'superadmin') {
+                    alert('You can not delete this account!');
+                } else {
+                if (confirm("Do you want to delete your account?")) {
+                    fetch( `https://dorasitkmutt.ddns.net/api/DeleteUser?idUser=${user.userId}` , {
+                        method: "DELETE",
+                        headers: { "Authorization" : `Bearer ${this.token}`}
+                })
+                    alert('You have deleted account');
+                    location.reload()
+                    }
                 }
             },
         }
     }
-
 </script>
 
 <style>
